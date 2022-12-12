@@ -1,0 +1,109 @@
+.profile {
+    @include flex(center, center);
+    height: 523px;
+
+    @include mobile {
+        flex-direction: column;
+        height: max-content;
+     
+    }
+    &-item {
+        width: 100%;
+        height: 100%;
+
+        .image-container {
+            position: relative;
+            height: 60%;
+            width: 90%;
+            border-radius: $border-radius;
+            background-color: rgba(0, 0, 0, 0.03);
+
+            .image {
+                height: 100%;
+                padding: 8px;
+            }
+            .hover {
+                height: 100%;
+                width: 100%;
+                position: absolute;
+                opacity: 0;
+                z-index: 10;
+                @include flex(center, center);
+            }
+
+            .hover-content {
+                height: 50%;
+                width: 50%;
+                color: #969696;
+                font-size: 100pt;
+                font-weight: 500;
+                @include flex(center, center);
+                .MuiSvgIcon-root {
+                    height: 100%;
+                    width: 100%;
+                }
+            }
+
+            .hover:hover {
+                opacity: 0.6;
+                background: #ffffffe5;
+                transition-property: opacity;
+                transition-duration: 0.25s;
+                transition-timing-function: ease-in-out;
+                transition-delay: 0s;
+                cursor: pointer;
+            }
+            .MuiAvatar-root {
+                height: 100%;
+                width: 100%;
+            }
+        }
+        &-right {
+            width: 80%;
+            height: 100%;
+            margin: auto;
+
+            @include flex(flex-start, center);
+            flex-direction: column;
+            row-gap: 15px;
+            &-fields {
+                @include flex(center, flex-start);
+                width: 100%;
+                flex-direction: column;
+                row-gap: 15px;
+                &-block {
+                    @include flex(flex-start, flex-start);
+                    flex-direction: column;
+                    row-gap: 10px;
+                    width: 100%;
+                    .MuiTextField-root {
+                        background-color: #00000033;
+                        margin-bottom: 10px;
+                    }
+                    .descriptions {
+                        color: #00000066;
+                        font-size: 12pt;
+                    }
+                    .btnPass{
+                        width: 30%;
+                    }
+                }
+            }
+            &-btn {
+                margin-top: 15px;
+                width: 40%;
+                height: 20px;
+            }
+        }
+    }
+    &-item:nth-child(1) {
+        width: 60%;
+        @include flex(center, center);
+        flex-direction: column;
+        row-gap: 10px;
+        margin-right: 80px;
+        @include mobile{
+            margin: 0;
+        }
+    }
+}

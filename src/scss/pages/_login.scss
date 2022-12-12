@@ -1,0 +1,91 @@
+.login {
+    height: 100vh;
+    width: 100%;
+    // background-image:
+    background: url(../../asset/pictures/bg.jpg);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    backdrop-filter: blur(10px);
+    &::before {
+        display: block;
+        position: absolute;
+        background-color: $btn-main-bg;
+        content: "";
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+        opacity: 0.5;
+    }
+    @include flex(center, center);
+
+    &-form {
+        @include mobile {
+            height: 80%;
+            width: 80%;
+        }
+        @include tablet {
+            height: 60%;
+            width: 80%;
+        }
+        @include flex(center, center);
+        background-color: $main-bg;
+        height: 80%;
+        width: 35%;
+        border-radius: 5px;
+        flex-direction: column;
+        padding: 2.5rem;
+
+        &-header {
+            text-align: center;
+            width: 100%;
+            margin-top: 40px;
+            &-title {
+                font-size: 20pt;
+                font-size: 700;
+                color: $txt-second-color;
+                text-align: center;
+                margin-top: 0.5rem;
+            }
+            &-logo {
+                @include flex(center, center);
+                img {
+                    width: 80px;
+                    height: 80px;
+                    border-radius: 50%;
+                }
+            }
+        }
+        &-body {
+            @include flex(center, center);
+            padding: 2rem 4rem;
+            flex-direction: column;
+            width: 100%;
+            height: 100%;
+        }
+    }
+    .Line::before {
+        margin-top: 25px;
+        margin-bottom: 25px;
+        display: inline-block;
+        content: "";
+        background-color: $btn-main-bg;
+        width: 100%;
+        height: 1px;
+    }
+
+    .MuiTextField-root {
+        background-color: $txtbox-bg;
+    }
+    .MuiInputBase-root {
+        color: $txt-main-color;
+    }
+    .MuiOutlinedInput-root {
+        color: $txt-main-color;
+        outline: $txt-main-color;
+        border-color: $txt-main-color;
+    }
+    .MuiInputLabel-root {
+        color: $txt-main-color;
+    }
+}

@@ -1,0 +1,13 @@
+.account {
+    &-search {
+        @include flex(center,center);
+        column-gap: 1.25rem;
+        width: 60%;
+        margin: auto;
+        height: 43px;    
+        
+        .MuiButton-root {
+            width: 30%;
+        }
+    }
+}

@@ -1,0 +1,129 @@
+.navbarheader {
+    &-navbar {
+        @include flex(center, flex-start);
+        height: 100%;
+        height: $navbar-header-height;
+        position: fixed;
+        top: 0;
+        width: 100%;
+        padding: 0.5rem;
+        z-index: 1000;
+        background-color: $main-bg;
+        &-icon {
+            height: 100%;
+            width: fit-content;
+            border-radius: 5px;
+            cursor: pointer;
+
+            &:hover {
+                background-color: #00000066;
+                opacity: 0.7;
+                transition: ease-in 0.25s;
+            }
+        }
+        .active {
+            background-color: #00000066 !important;
+        }
+
+        &-bread {
+            @include flex(center, center);
+        }
+    }
+    &-side {
+        &-sidemenu {
+            position: fixed;
+            width: fit-content;
+            max-width: 350px;
+            height: max-content;
+            left: 10px;
+            top: calc(#{$navbar-header-height} + 5px);
+            background: #ffffff;
+            box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.25);
+            border-radius: 5px;
+            z-index: 101;
+            padding: 0.8rem 1.5rem;
+            display: none;
+
+            @include mobile {
+                width: fit-content;
+                max-width: 250px;
+            }
+            &-header {
+                height: fit-content;
+                margin-bottom: 15px;
+                &-item {
+                    @include flex(center, flex-start);
+                    column-gap: 5px;
+                    flex-direction: column;
+                    width: 100%;
+                    padding: 5px 10px;
+                    border-radius: 5px;
+                    flex-direction: row;
+                    cursor: pointer;
+                    max-height: 50px;
+                    &:hover {
+                        background: $item-hover;
+                        // box-shadow: 0px 4px 4px 0px #00000040;
+                        // filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+                    }
+                    a {
+                        color: $txt-third-color !important;
+                    }
+                }
+                a:hover {
+                    background-color: unset;
+                }
+            }
+            .divider {
+                width: 100%;
+                height: 1px;
+
+                margin: auto;
+
+                background-color: #00000066;
+            }
+
+            &-body {
+                height: fit-content;
+                margin-top: 10px;
+                &-item {
+                    @include flex(flex-start, center);
+                    flex-direction: column;
+                    width: 100%;
+                    padding: 5px 10px;
+                    color: $txt-third-color;
+                    border-radius: 5px;
+                    cursor: pointer;
+                    &:hover {
+                        background: $item-hover;
+                        // box-shadow: 0px 4px 4px 0px #00000040;
+                        // filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+                    }
+                }
+                a:hover {
+                    background-color: unset;
+                }
+            }
+        }
+        .active {
+            // transform: scaleX(1);
+            // transition: transform ease-out 0.2s;
+            display: block;
+            animation: rotateX 300ms ease-in-out forwards;
+            transform-origin: top center;
+        }
+        @keyframes rotateX {
+            0% {
+                opacity: 0;
+                transform: rotateX(-90deg);
+            }
+            50% {
+                transform: rotateX(-20deg);
+            }
+            100% {
+                opacity: 1;
+                transform: rotateX(0deg);
+            }
+        }
+    }
+}

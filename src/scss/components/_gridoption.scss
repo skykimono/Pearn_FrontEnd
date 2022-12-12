@@ -1,0 +1,11 @@
+.gridoption {
+    position: relative;
+    display: block;
+    height: 24px;
+    border-radius: 5px;
+    cursor: pointer;
+    button{
+        outline: unset;
+        border: unset;
+    }
+}

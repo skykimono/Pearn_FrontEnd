@@ -1,0 +1,14 @@
+.lineaction {
+    @include flex(center, flex-start);
+    width: 100%;
+    color: $txt-third-color;
+    font-weight: 700;
+    column-gap: 8px;
+    cursor: pointer;
+    &-icon {
+        // padding-top: 5px;
+    
+        @include flex(center, center);
+        height: 100%;
+    }
+}

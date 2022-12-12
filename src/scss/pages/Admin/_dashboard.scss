@@ -1,0 +1,39 @@
+.dashboard {
+    width: 100%;
+
+    &-header {
+        padding: 1.25rem;
+        text-align: center;
+        margin-bottom: 20px;
+        &-title {
+            font-size: 20pt;
+            font-weight: 900;
+        }
+    }
+    &-body {
+        @include flex(center, space-between);
+        flex-direction: row;
+        width: 100%;
+
+        @include mobile {
+            flex-direction: column;
+        }
+        &-item {
+            @include flex(center, space-between);
+            flex-direction: column;
+            padding: 1rem;
+            font-size: 15pt;
+            @include mobile {
+                flex-direction: row;
+            }
+            &-title{
+                margin-bottom: 10px;
+            }
+
+            &-value{
+                color: $txt-second-color;
+                font-weight: 900;
+            }
+        }
+    }
+}

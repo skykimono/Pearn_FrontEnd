@@ -1,0 +1,18 @@
+.content {
+    @include flex(center, flex-start);
+
+    // display: none;
+    margin-top: calc(#{$navbar-header-height} + 75px);
+    flex-direction: column;
+    // overflow: auto;
+
+    @include mobile {
+        padding-top: calc(#{$navbar-header-height} + 50px);
+    }
+    &-body {
+        background-color: $main-bg;
+        padding: 2rem 10%;
+        width: 100%;
+        height: 100%;
+    }
+}
