@@ -2,12 +2,30 @@ import React from 'react'
 import { TextField } from '@mui/material';
 import { Box } from '@mui/system';
 import MyButton from '../components/MyButton';
+import { useState, useEffect } from 'react';
+import { LoginApi } from '../api/login.api';
+import { useNavigate } from 'react-router-dom';
 const Login = () => {
-    const handleSubmit = (event) => {
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+    const [isSuccess, setIsSuccess] = useState(true);
+    let navigate = useNavigate();
+    
+    const handleSubmit = async (event) => {
         event.preventDefault();
         event.stopPropagation();
-        console.log("Submit login form");
+        try{var res = await LoginApi.login(username,password); 
+        navigate('/profile');}
+        catch(err){setIsSuccess(false);}
     }
+
+    useEffect(() => {
+        if(localStorage.getItem('token'))
+        {
+            navigate('/profile');
+        }
+    },[])
+    
     return (
         <div className='login'>
             <div className='login-form'>
@@ -29,10 +47,11 @@ const Login = () => {
                             fullWidth
                             label="Username"
                             name="Username"
-                            autoComplete="email"
-                            type="email"
+                            autoComplete="text"
+                            type="text"
                             autoFocus
-
+                            value={username}
+                            onChange= {e => setUsername(e.target.value)}
                         // error
                         />
                         <TextField
@@ -45,10 +64,13 @@ const Login = () => {
                             label="Password:"
                             name="Password"
                             type="password"
+                            value={password}
+                            onChange= {e => setPassword(e.target.value)}
                         // error
                         />
                         <div className='Line'></div>
                         <div>
+                            {!isSuccess&&(<div className="login-form-error">Login Failed!</div>)}
                             <MyButton type="submit" fullWidth >Login</MyButton>
                         </div>
                     </Box>

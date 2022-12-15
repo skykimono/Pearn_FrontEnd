@@ -40,7 +40,7 @@ const MyDataGrid = props => {
                         }
                     }
                     else if (params.field === "option")
-                        return (<DataGridOptions click={params.row.option} />)
+                        return (<DataGridOptions click={params.row.option} params={params.value} />)
 
                 }
 

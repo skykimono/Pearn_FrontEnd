@@ -1,4 +1,12 @@
 import axiosClient from "./axiosClient"
+const AuthPath = {
+    GetUser: 'users',
+    GetAllUser: 'auth/profile',
+    PostUser: 'auth/profile',
+    EditUser: 'auth/profile',
+    DeleteUser: 'auth/profile',
+    
+}
 const userApi = {
     getUser: (id) => {
         const url = `/user/${id}`
@@ -7,10 +15,6 @@ const userApi = {
     getAllUsers: () => {
         const url = "/user/getAll"
         return axiosClient.get(url)
-    },
-    postUser: (body) => {
-        const url = '/user'
-        return axiosClient.post(url, {...body}) 
     },
     editUser: (id,body) => {
         const url = `/user/${id}`
@@ -21,7 +25,7 @@ const userApi = {
         return axiosClient.delete(url)
     },
     login: (body) => {
-        const url ='/user/login'
+        const url ='auth/login'
         return axiosClient.post(url, {...body})
     },
     register: (body) => {

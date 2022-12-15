@@ -5,14 +5,23 @@ import ReorderIcon from '@mui/icons-material/Reorder';
 import SettingsIcon from '@mui/icons-material/Settings';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { Avatar } from '@mui/material';
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import useProfile from '../hooks/useProfile';
 
 const NavbarHeader = props => {
     const menuRef = useRef(null);
     const iconRef = useRef(null);
-
+    let navigate = useNavigate();
+    const {fullname, role} = useProfile();
     const LogOut = () =>{
-        
+        localStorage.removeItem('token');
+        localStorage.removeItem('rtoken');
+        localStorage.removeItem('role');
+        navigate('/login');
+    }
+    const ToProfile = () =>{
+        navigate('/profile')
     }
     const closeSideMenu = () => {
         // let valid = iconRef.current.activeElement
@@ -48,10 +57,10 @@ const NavbarHeader = props => {
                             <div>
                                 <Avatar alt="Avatar" variant='rounded' src={require('../asset/pictures/avatar.jpg')} > N</Avatar>
                             </div>
-                            Nguyen Hoang Thai Duong
+                            {fullname}
                         </div>
                         <div className="navbarheader-side-sidemenu-header-item">
-                            <Link to={"/profile"}>
+                            <Link to={"/profile"} onClick={ToProfile}>
                                 <SettingsIcon style={{ width: "24px" }} />
                                 Profile Settings
                             </Link>
@@ -68,16 +77,18 @@ const NavbarHeader = props => {
 
                     </div>
                     <div className="navbarheader-side-sidemenu-body">
+                    { role==='admin'&&(
                         <div className="navbarheader-side-sidemenu-body-item">
                             <Link to={"/admin"}>
                                 Dashboard
                             </Link>
-                        </div>
+                        </div>)}
+                        {role === 'staff'&&(
                         <div className="navbarheader-side-sidemenu-body-item">
                             <Link to={"/courses"}>
                                 Courses
                             </Link>
-                        </div>
+                        </div>)}
                     </div>
                 </div>
             </div>

@@ -35,6 +35,8 @@ function App() {
         </Route>
 
         <Route path="*" element={<PageNotFound />}></Route>
+        <Route path="/404" element={<PageNotFound/>}></Route>
+        <Route path="/error" element={<PageNotFound/>}></Route>
       </Routes>
     </BrowserRouter>
   );

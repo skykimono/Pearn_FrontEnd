@@ -8,7 +8,6 @@ const header = object => {
         }
     })
 }
-let j = ""
 
 const fieldParse = (str) => {
     let tmp = str.trim().split(" ")

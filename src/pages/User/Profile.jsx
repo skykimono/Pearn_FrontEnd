@@ -7,12 +7,13 @@ import { Avatar } from '@mui/material';
 import TextField from '@mui/material/TextField';
 import MyButton from '../../components/MyButton';
 import { useRef } from 'react';
+import useProfile from '../../hooks/useProfile';
 
 const Profile = () => {
     const pictureRef = useRef(null)
     const [open, setOpen] = useState(false)
     const uploadPicture = () => pictureRef.current.click()
-
+    const {fullname, email, role} = useProfile();
     const onChange = (e) => {
         var file = e.target.files
         if (FileReader && file && file.length) {
@@ -48,7 +49,7 @@ const Profile = () => {
                     </div>
                 </div>
                 <div className='role'>
-                    Moderator
+                    {role}
                 </div>
             </div>
 
@@ -59,7 +60,7 @@ const Profile = () => {
                     <div className="profile-item-right-fields">
                         <div className="profile-item-right-fields-block">
                             <div className='label'>Full name:</div>
-                            <TextField className='input' fullWidth size='small' placeholder='name' name='name' />
+                            <TextField className='input' fullWidth size='small' placeholder={fullname} name='name' />
                             <Divider sx={{ height: '1px', width: '100%', borderBottomWidth: '2px' }} orientation="horizontal" />
                         </div>
                         <div className="profile-item-right-fields-block btnPassword">
@@ -77,7 +78,7 @@ const Profile = () => {
                         </div>
                         <div className="profile-item-right-fields-block">
                             <div className='label'>Email:</div>
-                            <TextField className='input' type="email" fullWidth size='small' placeholder='name' name='mail' />
+                            <TextField className='input' type="email" fullWidth size='small' placeholder= {email} name='mail' />
                             <Divider sx={{ height: '1px', width: '100%', borderBottomWidth: '2px' }} orientation="horizontal" />
                         </div>
                     </div>
