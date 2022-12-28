@@ -2,30 +2,11 @@ import React from 'react'
 import { TextField } from '@mui/material';
 import { Box } from '@mui/system';
 import MyButton from '../components/MyButton';
-import { useState, useEffect } from 'react';
-import { LoginApi } from '../api/login.api';
-import { useNavigate } from 'react-router-dom';
-const Login = () => {
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
-    const [isSuccess, setIsSuccess] = useState(true);
-    let navigate = useNavigate();
-    
-    const handleSubmit = async (event) => {
-        event.preventDefault();
-        event.stopPropagation();
-        try{var res = await LoginApi.login(username,password); 
-        navigate('/profile');}
-        catch(err){setIsSuccess(false);}
-    }
+import MyBackdrop from '../components/MyBackdrop';
+import useLogin from '../hooks/useLogin';
 
-    useEffect(() => {
-        if(localStorage.getItem('token'))
-        {
-            navigate('/profile');
-        }
-    },[])
-    
+const Login = () => {
+    const {username, password, onChange,  alert, handleSubmit } = useLogin();
     return (
         <div className='login'>
             <div className='login-form'>
@@ -46,12 +27,12 @@ const Login = () => {
                             required
                             fullWidth
                             label="Username"
-                            name="Username"
-                            autoComplete="text"
+                            name="username"
                             type="text"
                             autoFocus
                             value={username}
-                            onChange= {e => setUsername(e.target.value)}
+                            onChange={onChange}
+
                         // error
                         />
                         <TextField
@@ -62,21 +43,21 @@ const Login = () => {
                             required
                             fullWidth
                             label="Password:"
-                            name="Password"
+                            name="password"
                             type="password"
                             value={password}
-                            onChange= {e => setPassword(e.target.value)}
+                            onChange={onChange}
                         // error
                         />
+                        {alert}
                         <div className='Line'></div>
                         <div>
-                            {!isSuccess&&(<div className="login-form-error">Login Failed!</div>)}
                             <MyButton type="submit" fullWidth >Login</MyButton>
                         </div>
                     </Box>
                 </div>
             </div>
-
+            <MyBackdrop />
         </div>
     )
 }

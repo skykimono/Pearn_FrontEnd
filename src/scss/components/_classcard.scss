@@ -30,17 +30,23 @@
         height: 130px;
         padding: 15px;
         @include mobile {
-            height: fit-content;
+            // height: fit-content;
+
         }
         .MuiAvatar-root {
             height: 100%;
             color: black;
         }
+        
     }
     &-name {
         font-size: 13pt;
         width: 85%;
         margin: auto;
         padding: 0.8rem;
+        text-align: center;
+    }
+    @include tablet{
+        width: 85%;
     }
 }

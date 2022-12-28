@@ -1,96 +1,65 @@
-import React from 'react'
-import PropTypes from 'prop-types'
 import MyDataGrid from '../../components/MyDataGrid'
 import SearchBar from '../../components/SearchBar';
-import Rows from '../../asset/temp/Courses'
-import variable from '../../utils/variable'
 import LineAction from '../../components/LineAction';
-import Modal from '@mui/material/Modal';
 import Divider from '@mui/material/Divider';
-import { useState } from 'react';
-import MyButton from '../../components/MyButton';
+import { useNavigate } from 'react-router-dom'
 import Input from '@mui/material/Input';
-import Box from '@mui/material/Box';
 import Template, {
-  TemplateTitle, TemplateLineAction, TemplateData,
+  TemplateLineAction, TemplateData,
   TemplateSearch, TemplateModal, TemplateModalTitle,
   TemplateModalBody, TemplateModalAction
 } from '../../components/Template';
 import MiniPopup from '../../components/MiniPopup';
-const Courses = props => {
-  const [OpenCreateCourseModal, setOpenCreateCourseModal] = useState(false)
-  const [OpenAddLecturerModal, setOpenAddLecturerModal] = useState(false)
-  const [OpenMiniPopupCourses, setOpenMiniPopupCourses] = useState(false)
-  const headers = variable([
-    "Id",
-    "Code",
-    "Class Name",
-    "Lecturer",
-    "Option"
-  ])
-  const rows = [{
-    code: "SE110",
-    className: "Object Oriented Analysis and Design",
-    lecturer: () => setOpenAddLecturerModal(true),
-    option: () => setOpenMiniPopupCourses(true)
-  },
-  {
-    code: "SE111",
-    className: "Object Oriented Analysis and Design",
-    lecturer: "Nguyễn Hoàng Thái Dương",
-    option: () => setOpenMiniPopupCourses(true)
-  },
-  {
-    code: "SE132",
-    className: "Object Oriented Analysis and Design",
-    lecturer: () => setOpenAddLecturerModal(true),
-    option: () => setOpenMiniPopupCourses(true)
-  },
-  {
-    code: "SE105",
-    className: "Object Oriented Analysis and Design",
-    lecturer: "Nguyễn Hoàng Thái Dương",
-    option: () => setOpenMiniPopupCourses(true)
-  }]
-  const openCreateCourseModal = () => setOpenCreateCourseModal(true)
-  const closeCreateCourseModal = () => setOpenCreateCourseModal(false)
-  const openAddLecturerModal = () => setOpenAddLecturerModal(true)
-  const closeAddLecturerModal = () => setOpenAddLecturerModal(false)
+import { useDispatch } from 'react-redux';
+import { CourseHeaders, LecturerHeaders } from '../../utils/datagridHeader';
+import useLoadCourses from '../../hooks/CoursesPageHooks/useLoadCourses';
+import useAddLectures from '../../hooks/CoursesPageHooks/useAddLecture';
+import useDeleteLecture from '../../hooks/CoursesPageHooks/useDeleteLecture';
+import useCreateCourse from '../../hooks/CoursesPageHooks/useCreateCourse';
+import useDeleteCourse from '../../hooks/CoursesPageHooks/useDeleteCourse';
+const Courses = () => {
+  let dispatch = useDispatch()
+  let navigate = useNavigate()
+  const { Courses ,rows, selectCourseID, selectLecturerID, OpenMiniPopupCourses, setOpenMiniPopupCourses, 
+    OpenAddLecturerModal ,setOpenAddLecturerModal } = useLoadCourses();
+  const { Lecturers, leturersRows, searchLecturersData, setSearchLecturersData } = useAddLectures(selectCourseID, Courses, setOpenAddLecturerModal );
+  const { handleRemoveLecturer } = useDeleteLecture(selectLecturerID, selectCourseID, Courses, Lecturers, searchLecturersData
+    ,setSearchLecturersData);
+  const {coursename, coursecode, handleCreateCourse, onCourseFormChange, OpenCreateCourseModal, setOpenCreateCourseModal
+  ,searchCourseData, setSearchCourseData} = useCreateCourse();
+ const {handleDeleteCourse} = useDeleteCourse(searchCourseData, setSearchCourseData, selectCourseID, Courses)
+  
 
-  const handleCreateCourse = (event) => {
-    event.preventDefault()
-    event.stopPropagation()
-
-  }
   return (
     <Template>
       <TemplateSearch>
-        <SearchBar />
+        <SearchBar data={rows} keyword={["coursename", "coursecode"]} onsearch={(data) => { setSearchCourseData(data) }} />
       </TemplateSearch>
-      <TemplateTitle>SE100</TemplateTitle>
       <TemplateLineAction>
         <LineAction
           name={"Create a course"}
-          click={openCreateCourseModal}
+          click={() => setOpenCreateCourseModal(true)}
         />
       </TemplateLineAction>
       <TemplateData>
-        <MyDataGrid ColumnHeader={headers} Data={rows} />
+        <MyDataGrid ColumnHeader={CourseHeaders} Data={searchCourseData.length > 0 ? searchCourseData : rows} />
         <MiniPopup
           open={OpenMiniPopupCourses}
-          close={() => setOpenMiniPopupCourses(false)}
+          close={() => {setOpenMiniPopupCourses('')}}
           actions={[
             {
-              name: "Add a student",
-              click: null
-            },
-            {
               name: "Manage student",
-              click: null
+              click: () => {
+                  navigate(`/courses/${selectCourseID}`)
+              }
             },
             {
               name: "Remove lecturer",
-              click: null
+              click: handleRemoveLecturer
+            },
+            {
+              name: "Delete",
+              click: handleDeleteCourse
             }
           ]}
         />
@@ -106,27 +75,27 @@ const Courses = props => {
           <Divider variant="middle" />
         </TemplateModalTitle>
         <TemplateModalBody >
-          <div className="courses-modal-content-field">
-            <div className="courses-modal-content-field-content">
-              <div className="courses-modal-content-field-content-label" >
+          <div className="template-modal-content-field">
+            <div className="template-modal-content-field-content">
+              <div className="template-modal-content-field-content-label" >
                 Enter course code:
               </div>
-              <div className="courses-modal-content-field-content-input" >
-                <Input required />
+              <div className="template-modal-content-field-content-input" >
+                <Input required name='coursecode' value={coursecode} onChange={onCourseFormChange} />
               </div>
             </div>
-            <div className="courses-modal-content-field-content">
-              <div className="courses-modal-content-field-content-label" >
+            <div className="template-modal-content-field-content">
+              <div className="template-modal-content-field-content-label" >
                 Enter course name:
               </div>
-              <div className="courses-modal-content-field-content-input" >
-                <Input required />
+              <div className="template-modal-content-field-content-input" >
+                <Input required name='coursename' value={coursename} onChange={onCourseFormChange} />
               </div>
             </div>
             <Divider variant="middle" />
           </div>
         </TemplateModalBody>
-        <TemplateModalAction funcError={closeCreateCourseModal} size="sm" />
+        <TemplateModalAction activeRight={"Create"} funcError={() => setOpenCreateCourseModal(false)} size="sm" />
       </TemplateModal>
       <TemplateModal
         open={OpenAddLecturerModal}
@@ -134,12 +103,12 @@ const Courses = props => {
         form={false}
       >
         <TemplateModalTitle>
-
+          <SearchBar data={leturersRows} keyword={["fullName", "username"]} onsearch={(data) => { setSearchLecturersData(data) }} />
         </TemplateModalTitle>
         <TemplateModalBody >
-          <MyDataGrid ColumnHeader={headers} />
+          <MyDataGrid ColumnHeader={LecturerHeaders} Data={searchLecturersData.length > 0 ? searchLecturersData : leturersRows} />
         </TemplateModalBody>
-        <TemplateModalAction funcError={closeAddLecturerModal} size="lg" />
+        <TemplateModalAction funcError={() => setOpenAddLecturerModal(false)} size="lg" />
       </TemplateModal>
     </Template>
   )

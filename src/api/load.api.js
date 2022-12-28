@@ -24,5 +24,41 @@ export const loadApi ={
       await sleep(5000);
       const result = await api.get('/users');
       return result.data
+    },
+    deleteUsers: async function(username){
+      var data ={
+        username
+      }
+      console.log(data)
+       const result = await api.delete('/auth/delete',{data});
+       return result
+    },
+    createUser: async function(username, password, fullname, email, role) {
+      var data= {
+        username,
+        password,
+        fullname,
+        email,
+        role
+      }
+      const result = await api.post('/auth/register',data);
+      return result
+    },
+    editUser: async function(fullname, email) {
+      var data={
+        ...(fullname && {fullname: fullname}),
+       ...(email && {email: email})
+      }
+      console.log(data);
+      const result = await api.put('/auth/profile',data)
+      return result;
+    },
+    changePassword: async function(oldPassword, newPassword){
+      var data={
+        oldPassword,
+        newPassword
+      }
+      const result = await api.post('/auth/password',data);
+      return result;
     }
 }

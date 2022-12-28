@@ -21,8 +21,9 @@ body {
     font-weight: 500;
     font-size: 14pt;
     @include mobile {
-        font-size: 10pt;
+        font-size: 9pt;
     }
+    
     .MuiButton-root {
         width: 100%;
         height: 100%;
@@ -50,30 +51,29 @@ body {
             border-radius: $border-radius;
             color: #fff;
         }
+        &.btnError{
+            background-color: $btn-second-bg;
+            transition: 0.25s;
+        }
+        &.btnError:hover,
+        &.btnError:focus
+        {
+            background-color: $btn-second-bg;
+            transition: 0.25s;
+        }
     }
     .MuiButton-root:hover,
     .MuiButton-root:focus {
         color: $btn-main-color;
         background-color: $btn-main-bg;
     }
-    .pulse:hover,
-    .pulse:focus {
+    .pulse:hover{
         animation: pulse 1s;
         box-shadow: 0 0 0 1rem rgba(#fff, 0);
     }
 
-    .btnError {
-        .MuiButton-root {
-            background-color: $btn-second-bg;
-        }
-    }
-    .btnError:hover,
-    .btnError:focus {
-        transition: 0.25s;
-        animation: pulse 1s;
-        box-shadow: 0 0 0 1rem rgba(#fff, 0);
-    }
     .btnPassword {
+        
         .MuiButton-root:hover,
         .MuiButton-root {
             background-color: $main-bg;
@@ -94,6 +94,11 @@ body {
     .MuiDataGrid-cell {
         color: $txt-third-color;
         font-weight: 700;
+        .MuiButton-root{
+            width: 50%;
+            height: 50%;
+            font-size: 8pt;
+        }
     }
     .MuiDataGrid-root {
         border-left: unset;

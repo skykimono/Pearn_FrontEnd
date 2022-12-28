@@ -4,21 +4,6 @@ import { insertToTextArea } from './insertToTextArea';
 
 const onImagePasted = (url, setMarkdown) => {
 
-  // let url = ""
-  // console.log(dataTransfer, "hello")
-  // const file = dataTransfer
-
-  // if (FileReader && file) {
-  //   var fr = new FileReader();
-  //   fr.onloadend = function () {
-  //     url = fr.result;
-  //   }
-
-  //   fr.readAsDataURL(file)
-  //   url = fr.result
-  // }
-
-
 
   const insertedMarkdown = insertToTextArea(`![](${url})`);
 

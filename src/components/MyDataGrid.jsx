@@ -3,44 +3,51 @@ import PropTypes from 'prop-types'
 import { DataGrid } from "@mui/x-data-grid"
 import DataGridOptions from './DataGridOptions'
 import DataGridAdd from './DataGridAdd'
-import useMousePosition from '../utils/mousePosition'
+import MyButton from './MyButton'
+import { findElementById } from '../utils/uitility'
+import { useFetchAllLecturers, useLecturers } from '../redux/user/hook'
 const MyDataGrid = props => {
-    // const mousePosition = useMousePosition()
-    // const dataGridFunctionRef = useRef(null)
-    const [pageSize, setPageSize] = React.useState(5);
-
-    // const closeOptionMenu = () => {
-    //     let valid = document.activeElement.children[0] ? document.activeElement.children[0].classList : ""
-    //     if (!(valid.value === "gridoption")) {
-    //         dataGridFunctionRef.current.classList.remove('show')
-    //         window.removeEventListener('click', closeOptionMenu)
-    //     }
-    // }
-    // const openOptionMenu = () => {
-    //     dataGridFunctionRef.current.style.top = `${mousePosition.y + 5 + document.documentElement.scrollTop}px`
-    //     dataGridFunctionRef.current.style.left = `${mousePosition.x + 5}px`
-    //     dataGridFunctionRef.current.classList.add('show')
-    //     window.addEventListener('click', closeOptionMenu)
-    // }
+    useFetchAllLecturers()
+    const Lecturers = useLecturers()
+    const [pageSize, setPageSize] = React.useState(6);
+    const checkList = props.CheckboxFunc ? props.CheckboxFunc : () => { console.log("null"); }
     const columns = props.ColumnHeader ?
         props.ColumnHeader.map((item) => {
             return {
-                field: item.key,
+                field: item.key === "id" ? "no." : item.key,
                 headerName: item.key === "id" ? "No." : item.value,
                 width: item.width,
                 headerAlign: 'center',
                 align: 'center',
                 renderCell: (params) => {
-                    if (params.field === "lecturer") {
+                    if (params.field === "lecturerId") {
                         if (params.value) {
                             if (typeof (params.value) === "function")
-                                return (<DataGridAdd click={params.row.lecturer} />)
-                            else
-                                return params.value
+                                return (<DataGridAdd click={() => { params.row.lecturerId(params.row.id) }} />)
+                            else {
+
+                                let element = findElementById(params.value, Lecturers)
+                                if (element)
+                                    return element.fullName
+                                // return params.value
+                            }
                         }
                     }
-                    else if (params.field === "option")
-                        return (<DataGridOptions click={params.row.option} params={params.value} />)
+                    else if (params.field === "option") {
+                        let id = params.row.id
+                        let type = params.row.option.type ? params.row.option.type : ""
+                        let func = params.row.option.click ? params.row.option.click : () => { console.log("null here") }
+                        let lecturerId = params.row.lecturerId ? typeof (params.row.lecturerId) === "function" ? "" : params.row.lecturerId : ""
+
+                        if (type === "option")
+                            return (<DataGridOptions click={() => { func(id, lecturerId) }} />)
+                        else if (type === "confirm")
+                            return (<MyButton size="sm" onclick={() => func(id)} >Confirm</MyButton>)
+                        else if (type === "delete")
+                            return ""
+                        // return <DataGridOptions click={() => func(id, name)} type={type} />
+                    }
+
 
                 }
 
@@ -72,23 +79,13 @@ const MyDataGrid = props => {
                 columns={columns}
                 pageSize={pageSize}
                 onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
-                rowsPerPageOptions={[5, 10, 15]}
-                // checkboxSelection
+                rowsPerPageOptions={[6, 10, 15]}
+                checkboxSelection={props.Checkbox}
                 disableSelectionOnClick
+                onSelectionModelChange={(id) => { checkList(id) }}
+                loading={rows ? rows.length > 0 ? false : true : true}
                 experimentalFeatures={{ newEditingApi: true }}
             />
-            {/* <div className="datagrid-function" ref={dataGridFunctionRef}>
-                <div className="datagrid-function-item">
-                    Add a Student
-                </div>
-                <div className="datagrid-function-item">
-                    Manage students
-                </div>
-                <div className="datagrid-function-item">
-                    Remove lecturer
-                </div>
-            </div> */}
-
         </React.Fragment>
 
     )
@@ -96,7 +93,9 @@ const MyDataGrid = props => {
 
 MyDataGrid.propTypes = {
     ColumnHeader: PropTypes.array,
-    Data: PropTypes.array
+    Data: PropTypes.array,
+    Checkbox: PropTypes.bool,
+    CheckboxFunc: PropTypes.func
 }
 
 export default MyDataGrid

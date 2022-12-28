@@ -7,6 +7,14 @@
         height: max-content;
      
     }
+
+    @include tablet{
+        flex-direction: column;
+        height: max-content;
+    }
+    @include largescreen{
+        height: 100%;
+    }
     &-item {
         width: 100%;
         height: 100%;
@@ -66,6 +74,16 @@
             @include flex(flex-start, center);
             flex-direction: column;
             row-gap: 15px;
+            @include tablet{
+                .MuiBox-root {
+                    width: 100%
+                }
+            }
+            @include largescreen{
+                .MuiBox-root {
+                    width: 100%
+                }
+            }
             &-fields {
                 @include flex(center, flex-start);
                 width: 100%;
@@ -85,7 +103,7 @@
                         font-size: 12pt;
                     }
                     .btnPass{
-                        width: 30%;
+                        width: 50%;
                     }
                 }
             }
@@ -103,6 +121,9 @@
         row-gap: 10px;
         margin-right: 80px;
         @include mobile{
+            margin: 0;
+        }
+        @include tablet{
             margin: 0;
         }
     }

@@ -1,37 +1,42 @@
+
 import axiosClient from "./axiosClient"
-const AuthPath = {
-    GetUser: 'users',
-    GetAllUser: 'auth/profile',
-    PostUser: 'auth/profile',
-    EditUser: 'auth/profile',
-    DeleteUser: 'auth/profile',
-    
-}
+
 const userApi = {
-    getUser: (id) => {
-        const url = `/user/${id}`
+    fetchUser: () => {
+        const url = `/auth/profile`
         return axiosClient.get(url)
     },
-    getAllUsers: () => {
-        const url = "/user/getAll"
+    fetchAllUsers: () => {
+        const url = `/users`
         return axiosClient.get(url)
     },
-    editUser: (id,body) => {
-        const url = `/user/${id}`
-        return axiosClient.patch(url, {...body})
+    fetchAllLecturers: () => {
+        const url = `api/user/get-lecturers`
+        return axiosClient.get(url)
+    },
+    fetchAllStudents: () => {
+        const url = `api/user/get-students`
+        return axiosClient.get(url)
+    },
+    changePasswordUser: (body) => {
+        const url = `/auth/password`
+        return axiosClient.post(url, { ...body })
+    },
+    updateUser: (body) => {
+        const url = `/auth/profile`
+        return axiosClient.put(url, { ...body })
     },
     deleteUser: (id) => {
-        const url = `/user/${id}`
+        const url = `/api/user/users/${id}`
         return axiosClient.delete(url)
     },
     login: (body) => {
-        const url ='auth/login'
-        return axiosClient.post(url, {...body})
+        const url = `/auth/login`
+        return axiosClient.post(url, { ...body })
     },
     register: (body) => {
-        const url = '/user/register'
-        return axiosClient.post(url, {...body})
+        const url = '/api/auth/register'
+        return axiosClient.post(url, { ...body })
     }
 }
-
 export default userApi

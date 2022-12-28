@@ -1,6 +1,8 @@
 .searchbar {
     @include flex(center, center);
-
+    @include mobile{
+        width: 100%;
+    }
     .MuiPaper-root {
         background-color: #0000001A;
         margin: auto;
@@ -10,6 +12,13 @@
 
         .MuiInputBase-root {
             color: inherit;
+        }
+        @include mobile{
+            width: 100%;
+            margin: 0;
+        }
+        @include tablet{
+            width: 70%;
         }
     }
     &-cancel {

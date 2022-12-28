@@ -1,135 +1,123 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import MyDataGrid from '../../components/MyDataGrid'
 import SearchBar from '../../components/SearchBar';
-import variable from '../../utils/variable'
 import LineAction from '../../components/LineAction';
 import { useState } from 'react';
-import RowCourse from "../../asset/temp/Course"
 import Template, {
   TemplateTitle, TemplateLineAction, TemplateData,
   TemplateSearch, TemplateModal, TemplateModalTitle,
   TemplateModalBody, TemplateModalAction
 } from '../../components/Template';
-import MiniPopup from '../../components/MiniPopup';
-const Course = props => {
-  const [open, setOpen] = useState(false)
-  const [OpenMiniPopupCourse, setOpenMiniPopupCourse] = useState(false)
-  const Header = variable([
-    "Id",
-    "User Name",
-    "Name",
-    "Email",
-    "Option"
-  ])
-  const AddStudentHeader = variable([
-    "User Name",
-    "Name",
-    "Email",
-    "Option"
-  ])
-  const ChangeLecturerHeader = variable([
-    "User Name",
-    "Name",
-    "Email",
-    "Option"
-  ])
-  const rows = [
-    {
-      userName: "20521865",
-      name: "Ha Gia Dong",
-      email: "ww34324sxcscwww@gmail.com",
-      option: () => { setOpenMiniPopupCourse(true) }
-    },
-    {
-      userName: "18521865",
-      name: "Truong Phat Thinh",
-      email: "wwwew1123ww@gmail.com",
-      option: () => { setOpenMiniPopupCourse(true) }
-    },
-    {
-      userName: "19521433",
-      name: "Ngo Tat To",
-      email: "sajdkajsasdwqhd@gmail.com",
-      option: () => { setOpenMiniPopupCourse(true) }
-    },
-    {
-      userName: "19521239",
-      name: "Hoang Thuy Linh",
-      email: "saj123232dkajshd@gmail.com",
-      option: () => { setOpenMiniPopupCourse(true) }
-    }
-  ]
-  const openModal = () => setOpen(true)
-  const closeModal = () => setOpen(false)
-
-  const handleCreate = () => {
-    // event.preventDefault()
-    // event.stopPropagation()
-    console.log('create');
-
+import { Navigate, useParams } from 'react-router-dom';
+import useLoadAssginedStudents from '../../hooks/ManageCourseHook/useLoadAssignedStudents';
+import useAddStudents from '../../hooks/ManageCourseHook/useAddStudents';
+import useRemoveStudents from '../../hooks/ManageCourseHook/useRemoveStudents';
+import useChangeLecturer from '../../hooks/ManageCourseHook/useChangeLecturer';
+import { assignedStudentsHeader, studentsHeaders, LecturerHeaders } from '../../utils/datagridHeader';
+const Course = () => {
+  const { courseId } = useParams("courseId")
+  const [checkStudents, setCheckStudents] = useState([])
+  const CheckStudents = (id) => {
+    setCheckStudents([...id])
   }
+  const {AssignedStudents, studentsAssignedRows, setStudentsAssignedRows, searchAssignedStudentsData, setSearchAssignedStudentsData} = 
+  useLoadAssginedStudents(courseId)
+  const {handleAddStudents, OpenAddStudentsModal, setOpenAddStudentsModal, 
+    searchStudentsAddedData, setSearchStudentsAddedData, studentsAddedRows} = useAddStudents(checkStudents, courseId, studentsAssignedRows, setStudentsAssignedRows)
+  const {handleRemoveStudent, OpenRemoveStudentsModal, setOpenRemoveStudentsModal, searchStudentsRemovedData,
+    setSearchStudentsRemovedData} = useRemoveStudents(checkStudents, courseId, studentsAssignedRows, setStudentsAssignedRows);
+  const { OpenChangeLecturerModal, setOpenChangeLecturerModal,
+    searchLecturersData, setSearchLecturersData, leturersRows, course, lecturer } = useChangeLecturer(courseId);
+
   return (
-    <Template>
-      <TemplateSearch>
-        <SearchBar />
-      </TemplateSearch>
-      <TemplateTitle>SE100</TemplateTitle>
-      <TemplateLineAction>
-        <LineAction
-          name={"Change Lecturer"}
-          click={openModal}
-        />
-      </TemplateLineAction>
-      <TemplateLineAction>
-        <LineAction
-          name={"Add a new Student"}
-          click={openModal}
-        />
-      </TemplateLineAction>
-      <TemplateData>
-        <MyDataGrid ColumnHeader={Header} Data={rows} />
-        <MiniPopup
-          open={OpenMiniPopupCourse}
-          close={() => setOpenMiniPopupCourse(false)}
-          actions={[
-            {
-              name: "Add a student",
-              click: null
-            },
-            {
-              name: "Manage student",
-              click: null
-            },
-            {
-              name: "Remove lecturer",
-              click: null
-            }
-          ]}
-        />
-      </TemplateData>
-      <TemplateModal
-        open={open}
-        size="lg"
-        form={false}
-      >
-        <TemplateModalTitle>
-          <SearchBar data={[]} />
-        </TemplateModalTitle>
-        <TemplateModalBody>
-          <MyDataGrid ColumnHeader={AddStudentHeader} Data={rows} />
-        </TemplateModalBody>
-        <TemplateModalAction
-          funcError={closeModal}
+    AssignedStudents === "false" ?
+      <Navigate to="/courses" />
+      :
+      <Template>
+        <TemplateSearch>
+          <SearchBar data={studentsAssignedRows} keyword={["fullName", "username"]} onsearch={(data) => { setSearchAssignedStudentsData(data) }} />
+        </TemplateSearch>
+        <TemplateTitle>{course ? `${course.coursecode} - ${course.coursename}` : ""}</TemplateTitle>
+        <TemplateTitle>Lecturer: {lecturer ? lecturer.fullName : "No lecturer assigned"}</TemplateTitle>
+        <TemplateLineAction>
+          <LineAction
+            name={"Change Lecturer"}
+            click={() => setOpenChangeLecturerModal(true)}
+          />
+        </TemplateLineAction>
+        <TemplateLineAction>
+          <LineAction
+            name={"Add new Students"}
+            click={() => setOpenAddStudentsModal(true)}
+          />
+        </TemplateLineAction>
+        <TemplateLineAction>
+          <LineAction
+            name={"Remove assigned Students"}
+            click={() => setOpenRemoveStudentsModal(true)}
+          />
+        </TemplateLineAction>
+        <TemplateData>
+          <MyDataGrid ColumnHeader={assignedStudentsHeader} Data={searchAssignedStudentsData.length > 0 ? searchAssignedStudentsData : studentsAssignedRows} />
+        </TemplateData>
+        <TemplateModal
+          open={OpenAddStudentsModal}
           size="lg"
-        />
-      </TemplateModal>
-    </Template>
+          form={true}
+          onsubmit={handleAddStudents}
+        >
+          <TemplateModalTitle>
+            <SearchBar data={studentsAddedRows} keyword={["fullName", "username"]} onsearch={(data) => { setSearchStudentsAddedData(data) }} />
+          </TemplateModalTitle>
+          <TemplateModalTitle>
+            Add new Students
+          </TemplateModalTitle>
+          <TemplateModalBody>
+            <MyDataGrid CheckboxFunc={CheckStudents} Checkbox ColumnHeader={studentsHeaders} Data={searchStudentsAddedData.length > 0 ? searchStudentsAddedData : studentsAddedRows} />
+          </TemplateModalBody>
+          <TemplateModalAction
+            activeRight={"Confirm"}
+            funcError={() => setOpenAddStudentsModal(false)}
+            size="lg"
+          />
+        </TemplateModal>
+        <TemplateModal
+          open={OpenRemoveStudentsModal}
+          size="lg"
+          form={true}
+          onsubmit={handleRemoveStudent}
+        >
+          <TemplateModalTitle>
+            <SearchBar data={studentsAssignedRows} keyword={["fullName", "username"]} onsearch={(data) => { setSearchStudentsRemovedData(data) }} />
+          </TemplateModalTitle>
+          <TemplateModalTitle>
+            Remove assigned Students
+          </TemplateModalTitle>
+          <TemplateModalBody>
+            <MyDataGrid CheckboxFunc={CheckStudents} Checkbox ColumnHeader={studentsHeaders} Data={searchStudentsRemovedData.length > 0 ? searchStudentsRemovedData : studentsAssignedRows} />
+          </TemplateModalBody>
+          <TemplateModalAction
+            activeRight={"Confirm"}
+            funcError={() => setOpenRemoveStudentsModal(false)}
+            size="lg"
+          />
+        </TemplateModal>
+        <TemplateModal
+          open={OpenChangeLecturerModal}
+          size="lg"
+          form={false}
+        >
+          <TemplateModalTitle>
+            <SearchBar data={leturersRows} keyword={["fullName", "username"]} onsearch={(data) => { setSearchLecturersData(data) }} />
+          </TemplateModalTitle>
+          <TemplateModalBody >
+            <MyDataGrid ColumnHeader={LecturerHeaders} Data={searchLecturersData.length > 0 ? searchLecturersData : leturersRows} />
+          </TemplateModalBody>
+          <TemplateModalAction funcError={() => setOpenChangeLecturerModal(false)} size="lg" />
+        </TemplateModal>
+      </Template>
+
   )
-}
-
-Course.propTypes = {
-
 }
 
 export default Course

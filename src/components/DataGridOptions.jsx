@@ -5,7 +5,7 @@ const DataGridOptions = props => {
 
     return (
         <button>
-            <div className="gridoption" onClick={props.click ? props.click : null} params={props.params}>
+            <div className="gridoption" onClick={props.click ? props.click : null}>
                 <MoreHorizIcon />
             </div>
         </button>

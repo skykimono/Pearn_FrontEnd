@@ -1,46 +1,45 @@
 import React, { useRef } from 'react'
-import PropTypes from 'prop-types'
 import MyBreadcrums from './MyBreadcrums'
 import ReorderIcon from '@mui/icons-material/Reorder';
 import SettingsIcon from '@mui/icons-material/Settings';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { Avatar } from '@mui/material';
-import { Link } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
-import useProfile from '../hooks/useProfile';
+import { Link } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux';
+import { logout } from '../redux/user/userSlice';
 
 const NavbarHeader = props => {
+    let dispatch = useDispatch()
+
+    const userValue = useSelector(state => state.userState.value)
+    const role = useSelector(state => state.userState.user ? state.userState.user.role : "")
     const menuRef = useRef(null);
     const iconRef = useRef(null);
-    let navigate = useNavigate();
-    const {fullname, role} = useProfile();
-    const LogOut = () =>{
-        localStorage.removeItem('token');
-        localStorage.removeItem('rtoken');
-        localStorage.removeItem('role');
-        navigate('/login');
-    }
-    const ToProfile = () =>{
-        navigate('/profile')
-    }
+
     const closeSideMenu = () => {
-        // let valid = iconRef.current.activeElement
-        // if (!(valid.value === "gridoption")) {
-        //     menuRef.current.classList.remove('active')
-        //     iconRef.current.classList.toggle('active')
-        // }
-        // console.log(valid);
-        // window.removeEventListener('click', closeSideMenu)
+        let valid = document.activeElement.id ? document.activeElement.id : ""
+        if (!(valid === "navbaricon")) {
+            menuRef.current.classList.remove('active')
+            iconRef.current.classList.remove('active')
+            window.removeEventListener('click', closeSideMenu)
+        }
+        else {
+            window.removeEventListener('click', closeSideMenu)
+        }
     }
+
     const menuToggle = () => {
         menuRef.current.classList.toggle('active')
         iconRef.current.classList.toggle('active')
-        // window.addEventListener('click', closeSideMenu)
+        window.addEventListener('click', closeSideMenu)
     }
     return (
         <div className='navbarheader'>
+
             <div className="navbarheader-navbar">
+
                 <div className="navbarheader-navbar-icon" onClick={menuToggle} ref={iconRef} >
+                    <input id='navbaricon' type="text" style={{ width: "100%", height: "100%", position: "absolute", display: "", opacity: "0", cursor: "pointer" }} />
                     <ReorderIcon />
                 </div>
                 <div className="navbarheader-navbar-bread">
@@ -48,26 +47,25 @@ const NavbarHeader = props => {
 
                 </div>
             </div>
+
             <div className="navbarheader-side">
-
-
                 <div className="navbarheader-side-sidemenu" ref={menuRef}>
                     <div className="navbarheader-side-sidemenu-header">
                         <div className="navbarheader-side-sidemenu-header-item bold">
                             <div>
-                                <Avatar alt="Avatar" variant='rounded' src={require('../asset/pictures/avatar.jpg')} > N</Avatar>
+                                <Avatar alt="Avatar" variant='rounded' src={userValue.avatar ? userValue.avatar : ""}> {userValue.fullName ? userValue.fullName.charAt(0) : "User"}</Avatar>
                             </div>
-                            {fullname}
+                            {userValue.fullname ? userValue.fullname : "User"}
                         </div>
                         <div className="navbarheader-side-sidemenu-header-item">
-                            <Link to={"/profile"} onClick={ToProfile}>
+                            <Link to={"/profile"}>
                                 <SettingsIcon style={{ width: "24px" }} />
                                 Profile Settings
                             </Link>
 
                         </div>
                         <div className="navbarheader-side-sidemenu-header-item" >
-                            <Link to={"/login"} onClick={LogOut}>
+                            <Link to={"/login"} onClick={() => { dispatch(logout()) }}>
                                 <LogoutIcon />
                                 Log Out
                             </Link>
@@ -77,18 +75,27 @@ const NavbarHeader = props => {
 
                     </div>
                     <div className="navbarheader-side-sidemenu-body">
-                    { role==='admin'&&(
-                        <div className="navbarheader-side-sidemenu-body-item">
-                            <Link to={"/admin"}>
-                                Dashboard
-                            </Link>
-                        </div>)}
-                        {role === 'staff'&&(
-                        <div className="navbarheader-side-sidemenu-body-item">
-                            <Link to={"/courses"}>
-                                Courses
-                            </Link>
-                        </div>)}
+                        {
+                            role === "admin" ?
+                                <div className="navbarheader-side-sidemenu-body-item">
+                                    <Link to={"/admin"}>
+                                        Dashboard
+                                    </Link>
+                                </div>
+                                :
+                                role === "mod" ?
+                                    <div className="navbarheader-side-sidemenu-body-item">
+                                        <Link to={"/courses"}>
+                                            Courses
+                                        </Link>
+                                    </div>
+                                    :
+                                    <div className="navbarheader-side-sidemenu-body-item">
+                                        <Link to={"/courses"}>
+                                            Courses
+                                        </Link>
+                                    </div>
+                        }
                     </div>
                 </div>
             </div>

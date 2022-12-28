@@ -1,81 +1,142 @@
-import React, { useState } from 'react'
 import Template, {
-  TemplateTitle, TemplateLineAction, TemplateData,
+  TemplateLineAction, TemplateData,
   TemplateSearch, TemplateModal, TemplateModalTitle,
   TemplateModalBody, TemplateModalAction
 } from '../../components/Template';
 import MyDataGrid from '../../components/MyDataGrid'
 import SearchBar from '../../components/SearchBar';
 import LineAction from '../../components/LineAction';
-import variable from '../../utils/variable'
+import { Divider, Input } from '@mui/material';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import { parseToLocalDate } from '../../utils/parseDate';
 import MiniPopup from '../../components/MiniPopup';
-import useLoadUser from '../../hooks/useLoadUser';
-const Accounts = (props) => {
-  const {users} = useLoadUser();
-  const [openMiniPopupAccounts, setOpenMiniPopupAccounts] = useState(false);
-  const headers = variable([
-    "Id",
-    "Username",
-    "Fullname",
-    "Email",
-    "Role",
-    "Option"
-  ])
+import { AccountHeaders } from '../../utils/datagridHeader';
+import useLoadAccounts from '../../hooks/AccountsPageHooks/useLoadAccounts';
+import useDeleteAccounts from '../../hooks/AccountsPageHooks/useDeleteAccount';
+import useCreateAccount from '../../hooks/AccountsPageHooks/useCreateAccount';
 
- 
-  const rows = users.map(user =>({
-    id: user._id,
-    username: user.username,
-    fullname: user.fullname,
-    email: user.email,
-    role: user.role,
-    option: () => setOpenMiniPopupAccounts(true)
-  }));
-
-  const deleteAccountHandler = (e) =>{
-      console.log(e);
-  }
+const Accounts = () => {
+  const {rows, OpenMiniPopupAccounts, setOpenMiniPopupAccounts, selectID} = useLoadAccounts();
+  const { username, password, email, fullName, role, repassword,
+    dateOfBirth, onChange, onCreateAccountSubmit,
+    openNewAccountModal, setopenNewAccountModal, alert } = useCreateAccount();
+  const {deleteAccount, searchData, setSearchData} = useDeleteAccounts(selectID);
+  
   return (
     <Template>
       <TemplateSearch>
-        <SearchBar />
+        <SearchBar data={rows} keyword={["fullName", "username"]} onsearch={(data) => { setSearchData(data) }} />
       </TemplateSearch>
       <TemplateLineAction>
         <LineAction
           name={"Create an account"}
-
+          click={() => setopenNewAccountModal(true)}
         />
       </TemplateLineAction>
       <TemplateData>
-        <MyDataGrid ColumnHeader={headers}  Data={rows}/>
+        <MyDataGrid ColumnHeader={AccountHeaders} Data={searchData.length > 0 ? searchData : rows} />
         <MiniPopup
-        open={openMiniPopupAccounts}
-        close={() =>setOpenMiniPopupAccounts(false)}
-        actions={
-          [
+          open={OpenMiniPopupAccounts}
+          close={() => setOpenMiniPopupAccounts("")}
+          actions={[
             {
-          name: "Delete Account",
-          click: deleteAccountHandler
+              name: "Delete account",
+              click: () => { deleteAccount() }
             }
-          ]
-        }/>
+          ]} />
+
       </TemplateData>
       <TemplateModal
-        open={false}
-        size="lg"
-        form={false}
+        open={openNewAccountModal}
+        size="sm"
+        form={true}
+        onsubmit={onCreateAccountSubmit}
       >
         <TemplateModalTitle>
-          <SearchBar data={[]} />
+          <p> Create new account:</p>
+          <Divider variant="middle" />
         </TemplateModalTitle>
         <TemplateModalBody>
-          <MyDataGrid ColumnHeader={headers} data={rows}/>
+          <div className="template-modal-content-field">
+            <div className="template-modal-content-field-content">
+              <div className="template-modal-content-field-content-label" >
+                Username:
+              </div>
+              <div className="template-modal-content-field-content-input" >
+                <Input type='text' required name="username" value={username} onChange={onChange} />
+              </div>
+            </div>
+            <div className="template-modal-content-field-content">
+              <div className="template-modal-content-field-content-label" >
+                Full Name:
+              </div>
+              <div className="template-modal-content-field-content-input" >
+                <Input type='text' required name="fullName" value={fullName} onChange={onChange} />
+              </div>
+            </div>
+            <div className="template-modal-content-field-content">
+              <div className="template-modal-content-field-content-label" >
+                Date of birth:
+              </div>
+              <div className="template-modal-content-field-content-input" >
+                <Input type='date' name="dateOfBirth" value={parseToLocalDate(dateOfBirth)} onChange={onChange} />
+              </div>
+            </div>
+
+            <div className="template-modal-content-field-content">
+              <div className="template-modal-content-field-content-label" >
+                Email:
+              </div>
+              <div className="template-modal-content-field-content-input" >
+                <Input type='email' required name="email" value={email} onChange={onChange} />
+              </div>
+            </div>
+            <div className="template-modal-content-field-content">
+              <div className="template-modal-content-field-content-label" >
+                Password:
+              </div>
+              <div className="template-modal-content-field-content-input" >
+                <Input type='password' required name="password" value={password} onChange={onChange} />
+              </div>
+            </div>
+            <div className="template-modal-content-field-content">
+              <div className="template-modal-content-field-content-label" >
+                Re-Password:
+              </div>
+              <div className="template-modal-content-field-content-input" >
+                <Input type='password' required name="repassword" value={repassword} onChange={onChange} />
+              </div>
+            </div>
+            <div className="template-modal-content-field-content">
+              <div className="template-modal-content-field-content-label" >
+                Role:
+              </div>
+              <div className="template-modal-content-field-content-input" >
+                <Select
+                  labelId="demo-simple-select-label"
+                  name="role"
+                  value={role}
+                  onChange={onChange}
+                  required
+                >
+                  <MenuItem value={"student"}>student</MenuItem>
+                  <MenuItem value={"lecturer"}>lecturer</MenuItem>
+                  <MenuItem value={"mod"}>mod</MenuItem>
+                </Select>
+
+              </div>
+            </div>
+            {alert}
+          </div>
         </TemplateModalBody>
         <TemplateModalAction
-          size="lg"
+          activeRight={"Create"}
+          size="sm"
+          funcError={() => { setopenNewAccountModal(false) }}
         />
       </TemplateModal>
-    </Template>
+    </Template >
   )
 }
 

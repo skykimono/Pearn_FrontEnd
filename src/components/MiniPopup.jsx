@@ -10,18 +10,20 @@ const MiniPopup = props => {
         if (!(valid.value === "gridoption")) {
             minipopupFunctionRef.current.classList.remove('show')
             props.close()
-            window.removeEventListener('click', closeOptionMenu)
+            // window.removeEventListener('click', closeOptionMenu)
         }
-    }
-    const openOptionMenu = () => {
-        minipopupFunctionRef.current.style.top = `${mousePosition.y + 5 + document.documentElement.scrollTop}px`
-        minipopupFunctionRef.current.style.left = `${mousePosition.x + 5}px`
-        minipopupFunctionRef.current.classList.add('show')
-        window.addEventListener('click', closeOptionMenu)
+       
     }
     useEffect(() => {
-        if (props.open) {
-            openOptionMenu()
+        if (props.open !== "") {
+            // openOptionMenu()
+            minipopupFunctionRef.current.style.top = `${mousePosition.y + 5 + document.documentElement.scrollTop}px`
+            minipopupFunctionRef.current.style.left = `${mousePosition.x + 5}px`
+            minipopupFunctionRef.current.classList.add('show')
+            window.addEventListener('click', closeOptionMenu)
+        }
+        return () => {
+            window.removeEventListener('click', closeOptionMenu)
         }
     }, [props.open])
     return (
@@ -46,7 +48,7 @@ const MiniPopup = props => {
 
 MiniPopup.propTypes = {
     actions: PropTypes.array,
-    open: PropTypes.bool,
+    open: PropTypes.string,
     close: PropTypes.func
 }
 
