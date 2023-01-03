@@ -30,7 +30,7 @@ export const useFetchAllStudentsAssigned = (id) => {
             setResult("false")
             return
         }
-        setResult(rs.data)
+        setResult(rs.data.students)
 
     }
     useEffect(() => {

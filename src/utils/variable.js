@@ -12,7 +12,7 @@ const header = object => {
 const fieldParse = (str) => {
     if (str === "Course Code" || str === "Course Name")
         return str.trim().toLowerCase().split(" ").join("")
-    if (str === "Lecturer Name")
+    if (str === "Lecturer")
         return "lecturerId"
     let tmp = str.trim().split(" ")
     tmp[0] = tmp[0].toLowerCase()

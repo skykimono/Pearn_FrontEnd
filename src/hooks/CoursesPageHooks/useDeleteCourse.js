@@ -10,18 +10,18 @@ const useDeleteCourse = (searchCourseData, setSearchCourseData, selectCourseID, 
     const dispatch = useDispatch();
     const handleDeleteCourse = async () => {
 
-        let course = findElementById(selectCourseID, Courses)
-        console.log(course);
-        if (!course) {
+        // let course = findElementById(selectCourseID, Courses)
+        console.log(selectCourseID);
+        if (!selectCourseID) {
           dispatch(setSnackbar(notifyMessage.ERROR("course is null!")))
           return
         }
-        if (window.confirm(`Delete course ${course.coursecode}-${course.coursename} ?`)) {
+        if (window.confirm(`Delete course  ?`)) {
     
-          let rs = await courseApi.deleteCourse(course.id).catch(data => { return data.response })
+          let rs = await courseApi.deleteCourse(selectCourseID).catch(data => { return data.response })
           if (await rs.status === 200) {
             dispatch(setSnackbar(notifyMessage.DELETE_SUCCESS("course", "Lecturer removed.")))
-            dispatch(deleteCourses(course))
+            dispatch(deleteCourses(selectCourseID))
             if (searchCourseData.length > 0)
               setSearchCourseData([])
           }

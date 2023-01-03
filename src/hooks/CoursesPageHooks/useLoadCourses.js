@@ -15,9 +15,9 @@ const useLoadCourses = () =>{
           let tmp = Courses.map((item, index) => {
             return {
               ...item,
-              'no.': index + 1,
-              lecturerId: item.lecturerId ? item.lecturerId : (courseId) => {
-                setSelectCourseID(courseId)
+              'no.': index+1,
+              lecturerId: item.lecturer ? item.lecturer.username : (courseId) => {
+                setSelectCourseID(item._id)
                 setOpenAddLecturerModal(true)
               },
               option: {

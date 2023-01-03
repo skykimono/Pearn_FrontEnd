@@ -2,7 +2,7 @@ import axiosClient from "./axiosClient"
 
 const courseApi = {
     createCourse: (body) => {
-        const url = `/api/courses/`
+        const url = `/course`
         return axiosClient.post(url, { ...body })
     },
     updateCourse: (body) => {
@@ -10,29 +10,37 @@ const courseApi = {
         return axiosClient.patch(url, { ...body })
     },
     deleteCourse: (id) => {
-        const url = `/api/courses/${id}`
+        const url = `/course/${id}`
         return axiosClient.delete(url)
     },
     fetchAllCourses: () => {
-        const url = `/api/courses/get-all`
+        const url = `/course`
         return axiosClient.get(url)
     },
-    fetchAllAssignedCourses: () => {
-        const url = `/api/courses/get-assign-course`
+    fetchAllAssignedCourses: (id) => {
+        const url = `/course/${id}`
         return axiosClient.get(url)
     },
     fetchAllStudentsAssigned: (id) => {
-        const url = `/api/course-user/course-students/${id}`
+        const url = `/course/${id}`
         return axiosClient.get(url)
     },
     addStudentsForCourse: (body) => {
-        const url = `/api/course-user/add-students/`
+        const url = `/course/addStudent`
         return axiosClient.post(url, { ...body })
     },
     removeStudentsForCourse: (body) => {
-        const url = `/api/course-user/remove-students/`
-        return axiosClient.patch(url, { ...body })
+        const url = `/course/deleteStudent`
+        return axiosClient.post(url, { ...body })
     },
+    addLecturer: (body) =>{
+        const url =`/course/addLecturer`
+        return axiosClient.post(url, {...body})
+    },
+    removeLecturer: (body) =>{
+        const url =`course/removeLecturer`
+        return axiosClient.post(url, body)
+    }
 
 }
 export default courseApi

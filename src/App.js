@@ -31,7 +31,7 @@ function App() {
           {
 
             role === "admin" ? <Route path="/admin" element={<Accounts />} /> :
-              role === "mod" ?
+              role === "staff" ?
                 <React.Fragment>
                   <Route path="/courses" element={<Courses />} />
                   <Route path="/courses/:courseId" element={<Course />} />

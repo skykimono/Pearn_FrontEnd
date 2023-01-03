@@ -3,7 +3,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import courseApi from "../../api/courseAPI";
 
 export const fetchAllCourses = createAsyncThunk(
-    'user/fetchAllCourses',
+    'courses',
     async (data, { rejectWithValue }) => {
 
         const rs = await courseApi.fetchAllCourses().catch(data => { return data.response })
@@ -50,7 +50,7 @@ const coursesSlice = createSlice({
             let course = action.payload
             let courses = state.courses
 
-            let index = courses.findIndex(item => item.id === course.id)
+            let index = courses.findIndex(item => item._id === course._id)
 
             courses[index] = course
 
@@ -58,10 +58,10 @@ const coursesSlice = createSlice({
         }
         ,
         deleteCourses: (state, action) => {
-            let course = action.payload
+            let courseId = action.payload
             let courses = state.courses
 
-            let index = courses.findIndex(item => item.id === course.id)
+            let index = courses.findIndex(item => item._id === courseId)
 
             courses.splice(index, 1)
 

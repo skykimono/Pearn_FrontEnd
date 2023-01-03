@@ -11,11 +11,11 @@ const userApi = {
         return axiosClient.get(url)
     },
     fetchAllLecturers: () => {
-        const url = `api/user/get-lecturers`
+        const url = `users/lecturer`
         return axiosClient.get(url)
     },
     fetchAllStudents: () => {
-        const url = `api/user/get-students`
+        const url = `users/student`
         return axiosClient.get(url)
     },
     changePasswordUser: (body) => {
@@ -26,16 +26,20 @@ const userApi = {
         const url = `/auth/profile`
         return axiosClient.put(url, { ...body })
     },
-    deleteUser: (id) => {
-        const url = `/api/user/users/${id}`
-        return axiosClient.delete(url)
+    deleteUser: (username) => {
+        var data ={
+            username
+          }
+          console.log(data)
+        const url = `/auth/delete`
+        return axiosClient.delete(url, {data})
     },
     login: (body) => {
         const url = `/auth/login`
         return axiosClient.post(url, { ...body })
     },
     register: (body) => {
-        const url = '/api/auth/register'
+        const url = 'auth/register'
         return axiosClient.post(url, { ...body })
     }
 }

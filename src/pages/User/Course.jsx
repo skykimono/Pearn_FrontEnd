@@ -17,28 +17,30 @@ import { assignedStudentsHeader, studentsHeaders, LecturerHeaders } from '../../
 const Course = () => {
   const { courseId } = useParams("courseId")
   const [checkStudents, setCheckStudents] = useState([])
-  const CheckStudents = (id) => {
-    setCheckStudents([...id])
+  const CheckStudents = (ids) => {
+    const selectedRowsData = ids.map((id) => studentsAssignedRows.find((row) => row.id === id));
+    let selectedRowsUsername = []
+    selectedRowsData.forEach((row) =>selectedRowsUsername.push(row.username));
+    setCheckStudents(selectedRowsUsername)
   }
   const {AssignedStudents, studentsAssignedRows, setStudentsAssignedRows, searchAssignedStudentsData, setSearchAssignedStudentsData} = 
   useLoadAssginedStudents(courseId)
-  const {handleAddStudents, OpenAddStudentsModal, setOpenAddStudentsModal, 
-    searchStudentsAddedData, setSearchStudentsAddedData, studentsAddedRows} = useAddStudents(checkStudents, courseId, studentsAssignedRows, setStudentsAssignedRows)
+  const {CheckAddStudents, handleAddStudents, OpenAddStudentsModal, setOpenAddStudentsModal, 
+    searchStudentsAddedData, setSearchStudentsAddedData, studentsAddedRows} = useAddStudents(courseId, studentsAssignedRows, setStudentsAssignedRows)
   const {handleRemoveStudent, OpenRemoveStudentsModal, setOpenRemoveStudentsModal, searchStudentsRemovedData,
     setSearchStudentsRemovedData} = useRemoveStudents(checkStudents, courseId, studentsAssignedRows, setStudentsAssignedRows);
   const { OpenChangeLecturerModal, setOpenChangeLecturerModal,
-    searchLecturersData, setSearchLecturersData, leturersRows, course, lecturer } = useChangeLecturer(courseId);
-
+    searchLecturersData, setSearchLecturersData, leturersRows, course } = useChangeLecturer(courseId);
   return (
     AssignedStudents === "false" ?
-      <Navigate to="/courses" />
+     <Navigate to="/courses" />
       :
       <Template>
         <TemplateSearch>
-          <SearchBar data={studentsAssignedRows} keyword={["fullName", "username"]} onsearch={(data) => { setSearchAssignedStudentsData(data) }} />
+          <SearchBar data={studentsAssignedRows} keyword={["fullname", "username"]} onsearch={(data) => { setSearchAssignedStudentsData(data) }} />
         </TemplateSearch>
-        <TemplateTitle>{course ? `${course.coursecode} - ${course.coursename}` : ""}</TemplateTitle>
-        <TemplateTitle>Lecturer: {lecturer ? lecturer.fullName : "No lecturer assigned"}</TemplateTitle>
+        <TemplateTitle>{course ? `${course.code} - ${course.name}` : ""}</TemplateTitle>
+        <TemplateTitle>Lecturer: {course ? course.lecturer.fullname : "No lecturer assigned"}</TemplateTitle>
         <TemplateLineAction>
           <LineAction
             name={"Change Lecturer"}
@@ -67,13 +69,13 @@ const Course = () => {
           onsubmit={handleAddStudents}
         >
           <TemplateModalTitle>
-            <SearchBar data={studentsAddedRows} keyword={["fullName", "username"]} onsearch={(data) => { setSearchStudentsAddedData(data) }} />
+            <SearchBar data={studentsAddedRows} keyword={["fullname", "username"]} onsearch={(data) => { setSearchStudentsAddedData(data) }} />
           </TemplateModalTitle>
           <TemplateModalTitle>
             Add new Students
           </TemplateModalTitle>
           <TemplateModalBody>
-            <MyDataGrid CheckboxFunc={CheckStudents} Checkbox ColumnHeader={studentsHeaders} Data={searchStudentsAddedData.length > 0 ? searchStudentsAddedData : studentsAddedRows} />
+            <MyDataGrid CheckboxFunc={CheckAddStudents} Checkbox ColumnHeader={studentsHeaders} Data={searchStudentsAddedData.length > 0 ? searchStudentsAddedData : studentsAddedRows} />
           </TemplateModalBody>
           <TemplateModalAction
             activeRight={"Confirm"}
@@ -88,7 +90,7 @@ const Course = () => {
           onsubmit={handleRemoveStudent}
         >
           <TemplateModalTitle>
-            <SearchBar data={studentsAssignedRows} keyword={["fullName", "username"]} onsearch={(data) => { setSearchStudentsRemovedData(data) }} />
+            <SearchBar data={studentsAssignedRows} keyword={["fullname", "username"]} onsearch={(data) => { setSearchStudentsRemovedData(data) }} />
           </TemplateModalTitle>
           <TemplateModalTitle>
             Remove assigned Students
@@ -108,7 +110,7 @@ const Course = () => {
           form={false}
         >
           <TemplateModalTitle>
-            <SearchBar data={leturersRows} keyword={["fullName", "username"]} onsearch={(data) => { setSearchLecturersData(data) }} />
+            <SearchBar data={leturersRows} keyword={["fullname", "username"]} onsearch={(data) => { setSearchLecturersData(data) }} />
           </TemplateModalTitle>
           <TemplateModalBody >
             <MyDataGrid ColumnHeader={LecturerHeaders} Data={searchLecturersData.length > 0 ? searchLecturersData : leturersRows} />

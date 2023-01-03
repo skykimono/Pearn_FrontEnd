@@ -11,11 +11,7 @@ const useLoadAssginedStudents = (courseId) =>{
             return {
               ...item,
               'no.': index + 1,
-              option: {
-                type: "option",
-                click: (id) => {
-                }
-              }
+              id: index
             }
           })
           setStudentsAssignedRows([...tmp])

@@ -46,7 +46,7 @@ const Profile = () => {
                         <div className="profile-item-right-fields">
                             <div className="profile-item-right-fields-block">
                                 <div className='label'>Full name:</div>
-                                <TextField className='input' fullWidth size='small' name='fullName' value={fullname} onChange={onChange} required />
+                                <TextField className='input' fullWidth size='small' name='fullname' value={fullname} onChange={onChange} required />
                                 <Divider sx={{ height: '1px', width: '100%', borderBottomWidth: '2px' }} orientation="horizontal" />
                             </div>
                             <div className="profile-item-right-fields-block btnPassword">

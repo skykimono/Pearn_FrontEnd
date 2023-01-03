@@ -16,26 +16,29 @@ const useAddLecture = (selectCourseID, Courses, setOpenAddLecturerModal) =>{
 
 
 
-
     const handleAddLecturer = async (lecturerId) => {
-
-        let lecturer = findElementById(lecturerId, Lecturers)
         let course = findElementById(selectCourseID, Courses)
-        console.log(lecturer, course);
-        if (!lecturer && !course) {
+        let lecturer = findElementById(lecturerId, Lecturers)
+        if (!lecturerId && !selectCourseID) {
           dispatch(setSnackbar(notifyMessage.ERROR("lecturer or course is null!")))
           return
         }
-        if (window.confirm(`Add lectuerer ${lecturer.fullName} into course ${course.coursecode}-${course.coursename} ?`)) {
+        if (window.confirm(`Add lecturer ${lecturer.fullname} into course ?`)) {
           let updateForm = {
-            ...course,
-            lecturerId: lecturerId
+            username: lecturer.username,
+            courseId: selectCourseID
           }
-          let rs = await courseApi.updateCourse(updateForm).catch(data => { return data.response })
+          console.log(updateForm)
+          let rs = await courseApi.addLecturer(updateForm).catch(data => { return data.response })
           if (await rs.status === 200) {
             dispatch(setSnackbar(notifyMessage.UPDATE_SUCCESS("course", "Lecturer added.")))
             setOpenAddLecturerModal(false)
-            dispatch(updateCourses(rs.data))
+            let tempcourse = {...course,
+              lecturer: {
+                username: lecturer.username,
+                fullname: lecturer.fullname
+              } };
+            dispatch(updateCourses(tempcourse))
             if (searchLecturersData.length > 0)
               setSearchLecturersData([])
           }

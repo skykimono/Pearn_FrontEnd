@@ -1,6 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { updateUserValue } from '../../redux/user/userSlice';
 import userApi from '../../api/userAPI';
 import { setSnackbar } from '../../redux/snackbar/snackbarSlice';
 import notifyMessage from '../../utils/notifyMessage';
@@ -53,7 +52,7 @@ const useUpdateProfile = (userState) => {
         if (window.confirm("Update user profile?")) {
             let rs = await userApi.updateUser(userForm).catch(data => { return data.response })
             if (await rs.status === 200) {
-                dispatch(updateUserValue(rs.data))
+                // dispatch(updateUserValue(rs.data))
                 dispatch(setSnackbar(notifyMessage.UPDATE_SUCCESS("user")))
             }
             else {

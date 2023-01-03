@@ -1,10 +1,10 @@
-import React, { useRef } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 import { DataGrid } from "@mui/x-data-grid"
 import DataGridOptions from './DataGridOptions'
 import DataGridAdd from './DataGridAdd'
 import MyButton from './MyButton'
-import { findElementById } from '../utils/uitility'
+import { findLecturerByUsername } from '../utils/uitility'
 import { useFetchAllLecturers, useLecturers } from '../redux/user/hook'
 const MyDataGrid = props => {
     useFetchAllLecturers()
@@ -23,18 +23,18 @@ const MyDataGrid = props => {
                     if (params.field === "lecturerId") {
                         if (params.value) {
                             if (typeof (params.value) === "function")
-                                return (<DataGridAdd click={() => { params.row.lecturerId(params.row.id) }} />)
+                                return (<DataGridAdd click={() => { 
+                                    console.log(params.row.lecturerId)
+                                    params.row.lecturerId(params.row.lecturerId) }} />)
                             else {
-
-                                let element = findElementById(params.value, Lecturers)
+                                let element = findLecturerByUsername(params.value, Lecturers)
                                 if (element)
-                                    return element.fullName
-                                // return params.value
+                                    return element
                             }
                         }
                     }
                     else if (params.field === "option") {
-                        let id = params.row.id
+                        let id = params.row._id
                         let type = params.row.option.type ? params.row.option.type : ""
                         let func = params.row.option.click ? params.row.option.click : () => { console.log("null here") }
                         let lecturerId = params.row.lecturerId ? typeof (params.row.lecturerId) === "function" ? "" : params.row.lecturerId : ""
@@ -81,7 +81,7 @@ const MyDataGrid = props => {
                 onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
                 rowsPerPageOptions={[6, 10, 15]}
                 checkboxSelection={props.Checkbox}
-                disableSelectionOnClick
+                // disableSelectionOnClick
                 onSelectionModelChange={(id) => { checkList(id) }}
                 loading={rows ? rows.length > 0 ? false : true : true}
                 experimentalFeatures={{ newEditingApi: true }}

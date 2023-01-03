@@ -8,13 +8,13 @@ import notifyMessage from "../../utils/notifyMessage";
 const useCreateCourse = () =>{
     const dispatch = useDispatch();
     const initialCourseForm = {
-        coursename: "",
-        lecturerUserName: null,
-        coursecode: "",
+        name: "",
+        code: "",
+        locked: false,
       }
     const [OpenCreateCourseModal, setOpenCreateCourseModal] = useState(false)
     const [courseForm, setCourseForm] = useState(initialCourseForm)
-    const { coursename, coursecode } = courseForm
+    const { name, code } = courseForm
     const [searchCourseData, setSearchCourseData] = useState([])
 
 
@@ -30,11 +30,12 @@ const useCreateCourse = () =>{
         event.stopPropagation()
         if (window.confirm("Create course?")) {
           let rs = await courseApi.createCourse(courseForm).catch(data => { return data.response })
-          if (await rs.status === 200) {
+          if (await rs.status === 201) {
             dispatch(setSnackbar(notifyMessage.CREATE_SUCCESS("course")))
+            dispatch(addCourses(courseForm))
             setCourseForm(initialCourseForm)
             setOpenCreateCourseModal(false)
-            dispatch(addCourses(rs.data))
+            
             if (searchCourseData.length > 0)
               setSearchCourseData([])
           }
@@ -47,7 +48,7 @@ const useCreateCourse = () =>{
         }
       }
 
-      return {coursename, coursecode, handleCreateCourse, onCourseFormChange, OpenCreateCourseModal, setOpenCreateCourseModal,
+      return {name, code, handleCreateCourse, onCourseFormChange, OpenCreateCourseModal, setOpenCreateCourseModal,
     searchCourseData, setSearchCourseData};
 }
 

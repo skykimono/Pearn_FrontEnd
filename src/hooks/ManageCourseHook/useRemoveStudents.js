@@ -16,23 +16,21 @@ const useRemoveStudents = (checkStudents, courseId, studentsAssignedRows, setStu
         if (checkStudents.length > 0) {
           if (window.confirm(`Remove all students selected ?`)) {
             let updateForm = {
-              courseId: courseId,
-              studentIdList: checkStudents
+              usernames: checkStudents,
+              courseId: courseId
             }
+            console.log(updateForm)
             let rs = await courseApi.removeStudentsForCourse(updateForm).catch(data => { return data.response })
             if (await rs.status === 200) {
               dispatch(setSnackbar(notifyMessage.UPDATE_SUCCESS("course", "Students removed.")))
               setOpenRemoveStudentsModal(false)
     
-              let newStudents = studentsAssignedRows.filter(item => { return !checkStudents.includes(item.id) })
+              let newStudents = studentsAssignedRows.filter(item => { return !checkStudents.includes(item.username) })
               newStudents = newStudents.map((item, index) => {
                 return {
                   ...item,
                   'no.': index + 1,
-                  option: {
-                    type: "option",
-                    click: () => { }
-                  }
+                  id: index,
                 }
               })
               setStudentsAssignedRows([

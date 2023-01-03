@@ -1,6 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useDispatch } from 'react-redux';
-import { updateUserValue } from '../../redux/user/userSlice';
 import userApi from '../../api/userAPI';
 import { setSnackbar } from '../../redux/snackbar/snackbarSlice';
 import notifyMessage from '../../utils/notifyMessage';
@@ -46,7 +45,6 @@ const useUpdatePassword = () => {
                 let rs = await userApi.changePasswordUser(passwordForm).catch(data => { return data.response })
                 if (await rs.status === 200) {
                     setOpen(false)
-                    dispatch(updateUserValue(rs.data))
                     dispatch(setSnackbar(notifyMessage.UPDATE_SUCCESS("password")))
 
                 }

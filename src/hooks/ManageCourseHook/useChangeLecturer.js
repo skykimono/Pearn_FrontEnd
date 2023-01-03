@@ -23,21 +23,25 @@ const useChangeLecturer = (courseId) =>{
 
     const handleChangeLecturer = useCallback(async (lecturerId) => {
         let lecturer = findElementById(lecturerId, Lecturers)
-    
         if (!lecturer && !course) {
           dispatch(setSnackbar(notifyMessage.ERROR("lecturer or course is null!")))
           return
         }
-        if (window.confirm(`Add lectuerer ${lecturer.fullName} into course ${course.coursecode}-${course.coursename} ?`)) {
+        if (window.confirm(`Add lectuerer ${lecturer.fullname} into course ${course.code}-${course.name} ?`)) {
           let updateForm = {
-            ...course,
-            lecturerId: lecturerId
+            username: lecturer.username,
+            courseId
           }
-          let rs = await courseApi.updateCourse(updateForm).catch(data => { return data.response })
+          let rs = await courseApi.addLecturer(updateForm).catch(data => { return data.response })
           if (await rs.status === 200) {
             dispatch(setSnackbar(notifyMessage.UPDATE_SUCCESS("course", "Lecturer added.")))
             setOpenChangeLecturerModal(false)
-            dispatch(updateCourses(rs.data))
+            let tempcourse = {...course,
+            lecturer: {
+              username: lecturer.username,
+              fullname: lecturer.fullname
+            } };
+            dispatch(updateCourses(tempcourse))
             if (searchLecturersData.length > 0)
               setSearchLecturersData([])
           }

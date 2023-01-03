@@ -17,16 +17,16 @@ import useDeleteAccounts from '../../hooks/AccountsPageHooks/useDeleteAccount';
 import useCreateAccount from '../../hooks/AccountsPageHooks/useCreateAccount';
 
 const Accounts = () => {
-  const {rows, OpenMiniPopupAccounts, setOpenMiniPopupAccounts, selectID} = useLoadAccounts();
-  const { username, password, email, fullName, role, repassword,
-    dateOfBirth, onChange, onCreateAccountSubmit,
+  const {Users, rows, OpenMiniPopupAccounts, setOpenMiniPopupAccounts, selectID} = useLoadAccounts();
+  const { username, password, email, fullname, role, repassword,
+    dateofbirth, onChange, onCreateAccountSubmit,
     openNewAccountModal, setopenNewAccountModal, alert } = useCreateAccount();
-  const {deleteAccount, searchData, setSearchData} = useDeleteAccounts(selectID);
-  
+  const {deleteAccount, searchData, setSearchData} = useDeleteAccounts(selectID, rows, Users);
+  console.log(Users)
   return (
     <Template>
       <TemplateSearch>
-        <SearchBar data={rows} keyword={["fullName", "username"]} onsearch={(data) => { setSearchData(data) }} />
+        <SearchBar data={rows} keyword={["fullname", "username"]} onsearch={(data) => { setSearchData(data) }} />
       </TemplateSearch>
       <TemplateLineAction>
         <LineAction
@@ -72,7 +72,7 @@ const Accounts = () => {
                 Full Name:
               </div>
               <div className="template-modal-content-field-content-input" >
-                <Input type='text' required name="fullName" value={fullName} onChange={onChange} />
+                <Input type='text' required name="fullname" value={fullname} onChange={onChange} />
               </div>
             </div>
             <div className="template-modal-content-field-content">
@@ -80,7 +80,7 @@ const Accounts = () => {
                 Date of birth:
               </div>
               <div className="template-modal-content-field-content-input" >
-                <Input type='date' name="dateOfBirth" value={parseToLocalDate(dateOfBirth)} onChange={onChange} />
+                <Input type='date' name="dateofbrith" value={parseToLocalDate(dateofbirth)} onChange={onChange} />
               </div>
             </div>
 
@@ -122,7 +122,7 @@ const Accounts = () => {
                 >
                   <MenuItem value={"student"}>student</MenuItem>
                   <MenuItem value={"lecturer"}>lecturer</MenuItem>
-                  <MenuItem value={"mod"}>mod</MenuItem>
+                  <MenuItem value={"staff"}>staff</MenuItem>
                 </Select>
 
               </div>

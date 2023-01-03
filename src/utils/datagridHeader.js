@@ -3,23 +3,23 @@ import variable from "../utils/variable"
 export const AccountHeaders = variable([
     "Id",
     "Username",
-    "Full Name",
+    "FullName",
     "Email",
     "Role",
     "Option"
   ])
 
 export const CourseHeaders = variable([
-  "Id",
-    "Course Code",
-    "Course Name",
-    "Lecturer Name",
+    "Id",
+    "Code",
+    "Name",
+    "Lecturer",
     "Option"
 ])
 
 export const LecturerHeaders = variable([
-  "Username",
-    "Full Name",
+    "Username",
+    "FullName",
     "Email",
     "Role",
     "Option"
@@ -28,13 +28,14 @@ export const LecturerHeaders = variable([
 export const assignedStudentsHeader = variable([
   "Id",
   "Username",
-  "Full Name",
-  "Email",
+  "FullName",
+  'Email',
+  'Role'
 ])
 
 export const studentsHeaders = variable([
   "Username",
-  "Full Name",
+  "FullName",
   "Email",
   "Role"
 ])

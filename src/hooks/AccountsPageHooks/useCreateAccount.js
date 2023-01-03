@@ -7,25 +7,25 @@ import { parseToISOSDate, today } from "../../utils/parseDate";
 import MyAlert from "../../components/MyAlert";
 import notifyMessage from "../../utils/notifyMessage";
 
-const useCreateAccount = () =>{
+const useCreateAccount = (Users) =>{
 let dispatch = useDispatch();
     const initialUserForm = useMemo(() =>{
         return {
         username: "",
         password: "",
         email: "",
-        fullName: "",
+        fullname: "",
         role: "student",
         repassword: "",
-        dateOfBirth: today()
+        dateofbirth: today()
     }},[])
 const [userForm, setUserForm] = useState(initialUserForm)
-const { username, password, email, fullName, role, repassword, dateOfBirth } = userForm
+const { username, password, email, fullname, role, repassword, dateofbirth } = userForm
 const [openNewAccountModal, setopenNewAccountModal] = useState(false)
 const [alert, setAlert] = useState(null)
   const closeAlert = () => setAlert(null)
   const onChange = (e) => {
-    if (e.target.name === "dateOfBirth")
+    if (e.target.name === "dateofbirth")
       setUserForm({
         ...userForm,
         [e.target.name]: parseToISOSDate(e.target.value)
@@ -47,12 +47,11 @@ const [alert, setAlert] = useState(null)
 
       if (window.confirm("Create user account?")) {
         let rs = await userApi.register(userForm).catch(data => { return data.response })
-        if (await rs.status === 200) {
+        if (await rs.status === 201) {
           console.log(rs.data);
           dispatch(setSnackbar(notifyMessage.CREATE_SUCCESS("user")))
           dispatch(addUsers({
             ...userForm,
-            id: rs.data
           }))
           setUserForm(initialUserForm)
           setopenNewAccountModal(false)
@@ -67,8 +66,8 @@ const [alert, setAlert] = useState(null)
     setUserForm(initialUserForm)
   }, [initialUserForm])
 
-    return { username, password, email, fullName, role, repassword,
-            dateOfBirth, onChange, onCreateAccountSubmit,
+    return { username, password, email, fullname, role, repassword,
+            dateofbirth, onChange, onCreateAccountSubmit,
             openNewAccountModal, setopenNewAccountModal, alert }
 
 }

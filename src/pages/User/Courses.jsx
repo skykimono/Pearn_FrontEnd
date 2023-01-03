@@ -10,7 +10,6 @@ import Template, {
   TemplateModalBody, TemplateModalAction
 } from '../../components/Template';
 import MiniPopup from '../../components/MiniPopup';
-import { useDispatch } from 'react-redux';
 import { CourseHeaders, LecturerHeaders } from '../../utils/datagridHeader';
 import useLoadCourses from '../../hooks/CoursesPageHooks/useLoadCourses';
 import useAddLectures from '../../hooks/CoursesPageHooks/useAddLecture';
@@ -18,14 +17,13 @@ import useDeleteLecture from '../../hooks/CoursesPageHooks/useDeleteLecture';
 import useCreateCourse from '../../hooks/CoursesPageHooks/useCreateCourse';
 import useDeleteCourse from '../../hooks/CoursesPageHooks/useDeleteCourse';
 const Courses = () => {
-  let dispatch = useDispatch()
   let navigate = useNavigate()
   const { Courses ,rows, selectCourseID, selectLecturerID, OpenMiniPopupCourses, setOpenMiniPopupCourses, 
     OpenAddLecturerModal ,setOpenAddLecturerModal } = useLoadCourses();
   const { Lecturers, leturersRows, searchLecturersData, setSearchLecturersData } = useAddLectures(selectCourseID, Courses, setOpenAddLecturerModal );
   const { handleRemoveLecturer } = useDeleteLecture(selectLecturerID, selectCourseID, Courses, Lecturers, searchLecturersData
     ,setSearchLecturersData);
-  const {coursename, coursecode, handleCreateCourse, onCourseFormChange, OpenCreateCourseModal, setOpenCreateCourseModal
+  const {name, code, handleCreateCourse, onCourseFormChange, OpenCreateCourseModal, setOpenCreateCourseModal
   ,searchCourseData, setSearchCourseData} = useCreateCourse();
  const {handleDeleteCourse} = useDeleteCourse(searchCourseData, setSearchCourseData, selectCourseID, Courses)
   
@@ -33,7 +31,7 @@ const Courses = () => {
   return (
     <Template>
       <TemplateSearch>
-        <SearchBar data={rows} keyword={["coursename", "coursecode"]} onsearch={(data) => { setSearchCourseData(data) }} />
+        <SearchBar data={rows} keyword={["name", "code"]} onsearch={(data) => { setSearchCourseData(data) }} />
       </TemplateSearch>
       <TemplateLineAction>
         <LineAction
@@ -81,7 +79,7 @@ const Courses = () => {
                 Enter course code:
               </div>
               <div className="template-modal-content-field-content-input" >
-                <Input required name='coursecode' value={coursecode} onChange={onCourseFormChange} />
+                <Input required name='code' value={code} onChange={onCourseFormChange} />
               </div>
             </div>
             <div className="template-modal-content-field-content">
@@ -89,7 +87,7 @@ const Courses = () => {
                 Enter course name:
               </div>
               <div className="template-modal-content-field-content-input" >
-                <Input required name='coursename' value={coursename} onChange={onCourseFormChange} />
+                <Input required name='name' value={name} onChange={onCourseFormChange} />
               </div>
             </div>
             <Divider variant="middle" />
@@ -103,7 +101,7 @@ const Courses = () => {
         form={false}
       >
         <TemplateModalTitle>
-          <SearchBar data={leturersRows} keyword={["fullName", "username"]} onsearch={(data) => { setSearchLecturersData(data) }} />
+          <SearchBar data={leturersRows} keyword={["fullname", "username"]} onsearch={(data) => { setSearchLecturersData(data) }} />
         </TemplateModalTitle>
         <TemplateModalBody >
           <MyDataGrid ColumnHeader={LecturerHeaders} Data={searchLecturersData.length > 0 ? searchLecturersData : leturersRows} />

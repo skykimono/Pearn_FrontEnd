@@ -8,7 +8,7 @@ const initialState = {
     students: []
 }
 export const fetchAllUsers = createAsyncThunk(
-    'user/fetchAllUsers',
+    '/users',
     async (data, { rejectWithValue }) => {
 
         const rs = await userApi.fetchAllUsers().catch(data => { return data.response })
@@ -61,10 +61,10 @@ const allUsersSlice = createSlice({
             state.users = users
         },
         deleteUsers: (state, action) => {
-            let id = action.payload
+            let username = action.payload
             let users = state.users
 
-            let index = users.findIndex(item => item.id === id)
+            let index = users.findIndex(item => item.username === username)
 
             users.splice(index, 1)
 
