@@ -9,14 +9,30 @@ import LineAction from '../../components/LineAction';
 import ClassBlock from '../../components/ClassBlock';
 import MiniPopup from '../../components/MiniPopup';
 import { Divider, Grid, Input } from '@mui/material';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
 import { useFetchAllBlocks } from '../../redux/block/hook';
 import { Navigate, useNavigate, useParams } from 'react-router-dom';
 import { useRole } from '../../redux/user/hook';
 import useGetCourseName from '../../hooks/ClassHook/useGetCourseName';
 import useSubmitBlock from '../../hooks/ClassHook/useSubmitBlock';
 import useDeleteBlock from '../../hooks/ClassHook/useDeleteBlock';
+import { Box } from '@mui/material';
+import Tab from '@mui/material/Tab';
+import { TabContext } from '@mui/lab';
+import TabList from '@mui/lab/TabList';
+import TabPanel from '@mui/lab/TabPanel';
+import AverageGradeTable from '../../components/AverageGradeTable';
+import Rating from '@mui/material/Rating';
+import { useFetchAverageStar } from '../../redux/course/hook';
+import courseApi from '../../api/courseAPI';
+import { useDispatch } from 'react-redux';
+import { setSnackbar } from '../../redux/snackbar/snackbarSlice';
+import notifyMessage from '../../utils/notifyMessage';
+
 const Class = () => {
   let navigate = useNavigate()
+  let dispatch = useDispatch()
   const { courseId } = useParams("courseId")
   const Role = useRole()
   const Blocks = useFetchAllBlocks(courseId)
@@ -24,7 +40,34 @@ const Class = () => {
   const [blocksRows, setBlocksRows] = useState([]);
   const [mode, setMode] = useState("")
   const [OpenMiniPopupClass, setOpenMiniPopupClass] = useState("")
-  const { handleBlockSubmit, blockForm, setBlockForm, name, onBlockFormChange, searchBlocksData, setSearchBlocksData,
+  const [tabValue, setTabValue] = useState('1')
+  const {rating, setRating} = useFetchAverageStar(courseId)
+  const handleChange = (event, newValue) => {
+    setTabValue(newValue);
+  };
+  // const onRatingChange = (event, newValue) =>{
+  //   setRating(newValue)
+  // }
+  const onRatingClick = async (e) =>{
+    let data ={
+      stars: e.target.value
+    }
+    console.log(data)
+    if (window.confirm(`You want to rate this course?`)) {
+     let rs = await courseApi.rateCourse(data, courseId).catch(data => { return data.response }) 
+     if (await rs.status === 200) {
+      dispatch(setSnackbar(notifyMessage.UPDATE_SUCCESS("rating")))
+     }
+     else {
+      if (rs.status === 400)
+        dispatch(setSnackbar(notifyMessage.UPDATE_FAIL("rating", "Cannot update rating.")))
+      else
+        dispatch(setSnackbar(notifyMessage.UPDATE_FAIL("rating")))
+
+    }
+    }
+  }
+  const { handleBlockSubmit, blockForm, setBlockForm, name, type, onBlockFormChange, searchBlocksData, setSearchBlocksData,
     openBlockModal, setOpenBlockModal } = useSubmitBlock(Blocks, courseId, mode, blocksRows, setBlocksRows)
   const {handleDeleteBlock} = useDeleteBlock(Blocks, blocksRows, setBlocksRows, searchBlocksData, setSearchBlocksData, blockForm)
 
@@ -37,12 +80,24 @@ const Class = () => {
     Blocks === "false" ?
       <Navigate to="/courses" />
       :
-      <Template>
+      <Box sx={{ width: '100%', typography: 'body1' }}>
+      <TabContext value={tabValue}>
+        <Box sx={{ borderBottom: 2, borderColor: 'divider' }}>
+          <TabList onChange={handleChange} aria-label="lab API tabs example" centered>
+                <Tab label="Course List" value="1" />
+            {    Role === "lecturer" ?
+                <Tab label="Average Grade" value="2" />
+              : []}
+            </TabList>
+            </Box>
+            <TabPanel value="1">
+              <Rating value={rating}  onClick={onRatingClick}/>
+              <Template>
         <TemplateSearch>
           <SearchBar data={blocksRows} keyword={["name"]} onsearch={(data) => { setSearchBlocksData(data) }} />
         </TemplateSearch>
         <TemplateTitle>
-          {`${course.coursecode} - ${course.coursename}`}
+          {`${course.code} - ${course.name}`}
         </TemplateTitle>
         {
 
@@ -68,7 +123,7 @@ const Class = () => {
                           <React.Fragment key={index}>
                             <Grid item lg={3} >
                               <ClassBlock name={`${item.name}`} clicknav={() => {
-                                navigate(item.id)
+                                navigate(item._id)
                               }} click={() => {
                                 setOpenMiniPopupClass(item.id)
                                 setBlockForm({ ...blockForm, ...item })
@@ -84,7 +139,7 @@ const Class = () => {
                           <React.Fragment key={index}>
                             <Grid item lg={3} >
                               <ClassBlock name={`${item.name}`} clicknav={() => {
-                                navigate(item.id)
+                                navigate(item._id)
                               }} click={() => {
                                 setOpenMiniPopupClass(item.id)
                                 setBlockForm({ ...blockForm, ...item })
@@ -135,6 +190,22 @@ const Class = () => {
                           <Input required name='name' value={name} onChange={onBlockFormChange} />
                         </div>
                       </div>
+                      <div className="template-modal-content-field-content">
+                        <div className="template-modal-content-field-content-label" >
+                          Enter Type:
+                        </div>
+                        <div className="template-modal-content-field-content-input" >
+                        <Select
+                          labelId="demo-simple-select-label"
+                          name="type"
+                          value={type}
+                          onChange={onBlockFormChange}
+                          required>
+                           <MenuItem value={"common"}>Common</MenuItem>
+                           <MenuItem value={"exercise"}>Exercise</MenuItem>
+                        </Select>
+                        </div>
+                      </div>
                     </div>
                   </TemplateModalBody>
                 </TemplateModalBody>
@@ -154,7 +225,7 @@ const Class = () => {
                           <React.Fragment key={index}>
                             <Grid item lg={3} >
                               <ClassBlock name={`${item.name}`} clicknav={() => {
-                                navigate(item.id)
+                                navigate(item._id)
                               }} />
                             </Grid>
                           </React.Fragment>
@@ -167,7 +238,7 @@ const Class = () => {
                           <React.Fragment key={index}>
                             <Grid item lg={3} >
                               <ClassBlock name={`${item.name}`} clicknav={() => {
-                                navigate(item.id)
+                                navigate(item._id)
                               }} />
                             </Grid>
                           </React.Fragment>
@@ -180,7 +251,14 @@ const Class = () => {
             </React.Fragment>
         }
 
-      </Template>
+              </Template>
+            </TabPanel>
+            <TabPanel value="2">
+              <AverageGradeTable courseId={courseId}/>
+            </TabPanel>
+            </TabContext>
+            </Box>
+      
   )
 }
 

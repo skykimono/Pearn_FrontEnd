@@ -9,13 +9,15 @@ const useSubmitBlock = (Blocks, courseId, mode, blocksRows, setBlocksRows) => {
     let dispatch = useDispatch();
     const initialForm = useMemo(() =>{
         return {
+        name: "",
         courseId: courseId,
-        name: ""
+        markdown: 'please type here...',
+        type: 'markdown'
       }},[courseId])
     const [blockForm, setBlockForm] = useState(initialForm)
     const [searchBlocksData, setSearchBlocksData] = useState([])
     const [openBlockModal, setOpenBlockModal] = useState(false)
-    const { name } = blockForm
+    const { name, type } = blockForm
     const onBlockFormChange = (e) => {
         setBlockForm({
           ...blockForm,
@@ -26,25 +28,30 @@ const useSubmitBlock = (Blocks, courseId, mode, blocksRows, setBlocksRows) => {
     const handleBlockSubmit = async (event) => {
         event.preventDefault()
         event.stopPropagation()
-    
+        let updateForm = {
+          name: name
+        }
         if (window.confirm(`Confirm to ${mode === "New" ? "create new" : "update "} block?`)) {
           let rs
           if (mode === "New")
             rs = await blockApi.createBlock(blockForm).catch(data => { return data.response })
           else
-            rs = await blockApi.updateBlock(blockForm).catch(data => { return data.response })
+            rs = await blockApi.updateBlock(updateForm, blockForm._id).catch(data => { return data.response })
           if (await rs.status === 200) {
             if (mode === "New") {
-              setBlocksRows([...blocksRows, rs.data])
+              setBlocksRows([...blocksRows, {
+                ...blockForm,
+                _id: rs.data
+              }])
               dispatch(setSnackbar(notifyMessage.CREATE_SUCCESS("block", "Block added.")))
             }
             else {
-              let index = blocksRows.findIndex(item => item.id === rs.data)
+              let index = blocksRows.findIndex(item => item._id === blockForm._id)
               let tmp = blocksRows
+              let tmpchange = tmp[index];
+              tmpchange.name = name;
               tmp[index] = {
-                name: blockForm.name,
-                markdownDocument: blockForm.markdownDocument,
-                id: blockForm.id
+                ...tmpchange
               }
               setBlocksRows([...tmp])
               dispatch(setSnackbar(notifyMessage.UPDATE_SUCCESS("block")))
@@ -77,7 +84,8 @@ const useSubmitBlock = (Blocks, courseId, mode, blocksRows, setBlocksRows) => {
         }
       }, [mode, initialForm])
 
-      return { handleBlockSubmit, blockForm, setBlockForm, name, onBlockFormChange, searchBlocksData, setSearchBlocksData,
+
+      return { handleBlockSubmit, blockForm, setBlockForm, name, type, onBlockFormChange, searchBlocksData, setSearchBlocksData,
     openBlockModal, setOpenBlockModal }
 }
 

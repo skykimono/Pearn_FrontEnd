@@ -37,4 +37,23 @@ export const useFetchAllStudentsAssigned = (id) => {
         fetch()
     }, [])
     return result
+} 
+
+export const useFetchAverageStar = (id) => {
+    const [rating, setRating] = useState([])
+    const fetch = async () => {
+        const rs = await courseApi.getAverageStar(id).catch(data => { return data.response })
+        console.log(rs.data)
+        if (rs.status < 200 || rs.status >= 300) {
+            setRating('')
+            return
+        }
+        setRating(rs.data[0].stars)
+
+    }
+    useEffect(() => {
+        fetch()
+    }, [])
+    console.log(rating)
+    return {rating, setRating}
 }   

@@ -39,3 +39,15 @@ export const studentsHeaders = variable([
   "Email",
   "Role"
 ])
+
+export const GradeHeaders = variable([
+  "Username",
+  "Submission",
+  "Grade",
+  "Option"
+])
+
+export const AverageGradeHeaders = variable([
+  "Username",
+  "AverageGrade"
+])

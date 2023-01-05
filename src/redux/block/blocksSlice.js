@@ -25,36 +25,6 @@ const blocksSlice = createSlice({
     name: 'blocks',
     initialState,
     reducers: {
-        // addCourses: (state, action) => {
-        //     let course = action.payload
-        //     let courses = state.courses
-
-        //     courses.push(course)
-
-        //     state.courses = courses
-        // },
-
-        // updateCourses: (state, action) => {
-        //     let course = action.payload
-        //     let courses = state.courses
-
-        //     let index = courses.findIndex(item => item.id === course.id)
-
-        //     courses[index] = course
-
-        //     state.courses = courses
-        // }
-        // ,
-        // deleteCourses: (state, action) => {
-        //     let course = action.payload
-        //     let courses = state.courses
-
-        //     let index = courses.findIndex(item => item.id === course.id)
-
-        //     courses.splice(index, 1)
-
-        //     state.courses = courses
-        // }
     },
     extraReducers: (builder) => {
         builder.addCase(fetchAllBlocks.pending, state => {

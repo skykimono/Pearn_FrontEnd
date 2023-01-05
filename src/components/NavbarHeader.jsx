@@ -53,7 +53,7 @@ const NavbarHeader = props => {
                     <div className="navbarheader-side-sidemenu-header">
                         <div className="navbarheader-side-sidemenu-header-item bold">
                             <div>
-                                <Avatar alt="Avatar" variant='rounded' src={userValue.avatar ? userValue.avatar : ""}> {userValue.fullName ? userValue.fullName.charAt(0) : "User"}</Avatar>
+                                <Avatar alt="Avatar" variant='rounded' src={userValue.avatar ? userValue.avatar : ""}> {userValue.fullname ? userValue.fullname.charAt(0) : "User"}</Avatar>
                             </div>
                             {userValue.fullname ? userValue.fullname : "User"}
                         </div>

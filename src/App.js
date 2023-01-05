@@ -14,6 +14,7 @@ import Classes from "./pages/User/Classes";
 import ClassDetail from "./pages/User/ClassDetail";
 import { useSelector } from 'react-redux';
 import React,{useEffect} from "react";
+import Submission from "./pages/Submission";
 
 function App() {
   
@@ -41,6 +42,7 @@ function App() {
                     <Route path="/courses" element={<Classes />} />
                     <Route path="/courses/:courseId" element={<Class />} />
                     <Route path="/courses/:courseId/:blockId" element={<ClassDetail />} />
+                    <Route path="/submission/:submissionId" element={< Submission />} />
                   </React.Fragment> :
                   <></>
           }

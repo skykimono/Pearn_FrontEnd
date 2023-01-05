@@ -38,9 +38,17 @@ const courseApi = {
         return axiosClient.post(url, {...body})
     },
     removeLecturer: (body) =>{
-        const url =`course/removeLecturer`
+        const url =`/course/removeLecturer`
         return axiosClient.post(url, body)
+    },
+    getAverageStar: (id) => {
+        const url =`/course/rate/${id}`
+        return axiosClient.get(url)
+    },
+    rateCourse: (body, id) => {
+        const url =`/course/rate/${id}`
+        return axiosClient.post(url , {...body})
     }
-
+ 
 }
 export default courseApi

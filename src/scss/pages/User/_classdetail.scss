@@ -9,6 +9,8 @@
         &-txt {
             width: 200%;
             flex-grow: 1;
+            margin: auto;
+            text-align: center;
         }
         .MuiButton-root{
             height: 50%;
@@ -18,5 +20,14 @@
     &-md {
         width: 100%;
         transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        min-height: 250px;
+    }
+    &-btn {
+        width: 200px;
+        margin: 75px auto;
+        .MuiButton-root{
+            height: 35%;
+            width: 100%;
+        }
     }
 }

@@ -1,12 +1,12 @@
-import { useAssignedCourses, useFetchAllAssignedCourses } from "../../redux/course/hook";
+import { useCourses, useFetchAllCourses } from "../../redux/course/hook";
 import { useState, useEffect } from "react";
 import { findElementById } from '../../utils/uitility';
 
 
 
 const useGetCourseName = (courseId) =>{
-    useFetchAllAssignedCourses();
-    const Courses = useAssignedCourses();
+    useFetchAllCourses();
+    const Courses = useCourses();
     const [course, setCourse] = useState({})
 
     useEffect(() => {
@@ -15,6 +15,7 @@ const useGetCourseName = (courseId) =>{
           setCourse({ ...tmp })
         }
       }, [Courses, courseId])
+
 
       return {course};
 }

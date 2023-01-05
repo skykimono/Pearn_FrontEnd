@@ -47,6 +47,11 @@ const MyDataGrid = props => {
                             return ""
                         // return <DataGridOptions click={() => func(id, name)} type={type} />
                     }
+                    else if (params.field === "submission") {
+                        let id = params.row._id
+                        let func = params.row.submission.click ? params.row.submission.click : () => { console.log("null here") }
+                        return (<MyButton size="sm" onclick={() => func(id)} >View Submission</MyButton>)
+                    }
 
 
                 }
@@ -81,7 +86,7 @@ const MyDataGrid = props => {
                 onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
                 rowsPerPageOptions={[6, 10, 15]}
                 checkboxSelection={props.Checkbox}
-                // disableSelectionOnClick
+                disableSelectionOnClick
                 onSelectionModelChange={(id) => { checkList(id) }}
                 loading={rows ? rows.length > 0 ? false : true : true}
                 experimentalFeatures={{ newEditingApi: true }}

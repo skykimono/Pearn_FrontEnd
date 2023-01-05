@@ -1,0 +1,11 @@
+.submission{
+    text-align: center;
+    margin: 100px auto;
+    &-md {
+        width: 100%; 
+        margin-top: 50px;
+        text-align: left;
+        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        min-height: 250px;
+        font-size: x-large;}
+}

@@ -12,11 +12,11 @@ const useDeleteBlock = (Blocks, blocksRows, setBlocksRows, searchBlocksData, set
         if (window.confirm(`Delete this block?`)) {
     
     
-          let rs = await blockApi.deleteBlock(blockForm.id).catch(data => { return data.response })
+          let rs = await blockApi.deleteBlock(blockForm._id).catch(data => { return data.response })
           if (await rs.status === 200) {
     
             dispatch(setSnackbar(notifyMessage.DELETE_SUCCESS("block")))
-            let index = blocksRows.findIndex(item => item.id === blockForm.id)
+            let index = blocksRows.findIndex(item => item._id === blockForm._id)
             let tmp = blocksRows
             tmp.splice(index, 1)
             setBlocksRows([...tmp])

@@ -1,6 +1,5 @@
-import React, { useRef } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
-
 import Avatar from '@mui/material/Avatar';
 import DataGridOptions from './DataGridOptions';
 

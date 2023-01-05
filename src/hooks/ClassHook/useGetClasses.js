@@ -1,16 +1,16 @@
-import { useAssignedCourses, useFetchAllAssignedCourses } from '../../redux/course/hook';
+import { useCourses, useFetchAllCourses } from '../../redux/course/hook';
 import { useEffect, useState } from 'react';
 
 
 const useGetClasses = () => {
-    useFetchAllAssignedCourses()
-    const AssignedCourses = useAssignedCourses()
+    useFetchAllCourses();
+    const Courses = useCourses();
     const [assignedCourses, setAssignedCourses] = useState([])
     useEffect(() => {
-        if (AssignedCourses.length > 0) {
-            setAssignedCourses([...AssignedCourses])
+        if (Courses.length > 0) {
+            setAssignedCourses([...Courses])
         }
-    }, [AssignedCourses])
+    }, [Courses])
 
     return {assignedCourses}
 }

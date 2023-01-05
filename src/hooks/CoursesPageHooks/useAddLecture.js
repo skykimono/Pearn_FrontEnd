@@ -13,7 +13,7 @@ const useAddLecture = (selectCourseID, Courses, setOpenAddLecturerModal) =>{
     const Lecturers = useLecturers();
     const [leturersRows, setLecturersRows] = useState([]);
     const [searchLecturersData, setSearchLecturersData] = useState([]);
-
+    console.log(selectCourseID)
 
 
     const handleAddLecturer = async (lecturerId) => {

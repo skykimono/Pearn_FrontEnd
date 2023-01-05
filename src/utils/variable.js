@@ -24,11 +24,17 @@ const fieldInclude = (str) => {
     if ((tmp.includes("NAME") || tmp.includes("LECTURER")) && !tmp.includes("USER")) {
         return 330
     }
-    if (tmp.includes("USER")) {
-        return 150
+    if(tmp.includes("AVERAGEGRADE")){
+        return 650
+    }
+    if (tmp.includes("USER")|| tmp.includes("GRADE")) {
+        return 250
     }
     if (tmp.includes("EMAIL")) {
         return 330
+    }
+    if(tmp.includes("SUBMISSION")){
+        return 450
     }
     return 100
 }
